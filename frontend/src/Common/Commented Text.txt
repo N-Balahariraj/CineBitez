@@ -1,0 +1,47 @@
+Movies Component [Commented Text]:
+
+  // const [all_movie_data, setAllMovies] = useState(Movie_Data);
+
+  // console.log(searchText);
+
+  // const API_Data = async () => {
+  //   const Fetch_Data = await fetch("https://dummyapi.online/api/movies");
+  //   const Movie_Data = await Fetch_Data.json();
+  //   setFilteredData(Movie_Data);
+  //   setAllMovies(Movie_Data);
+  // };
+
+  // useEffect(() => {
+  //   API_Data();
+  // }, []);
+
+ {/* <span className="w-[100%] h-[50px] text-4xl text-white font-semibold font-sherif my-4">
+          Recommended for You
+        </span>
+        <div className="flex flex-wrap ml-5">
+          {Movie_Data.map((movie) => {
+            return <MovieCards key={movie.id} MovieDetails={movie} />;
+          })}
+        </div> */}
+
+      {/* <div className="flex flex-col h-[20rem] m-0 p-0">
+          <span className="text-4xl text-white font-semibold font-sherif mb-4">
+            Recommended for You
+          </span>
+          <div className="StreamBox">
+            {all_movie_data.map((movie) => {
+              return <MovieCards key={movie.id} MovieDetails={movie} />;
+            })}
+          </div>
+        </div>
+        <div className="flex flex-col h-[20rem] m-0 p-0">
+          <span className="text-4xl text-white font-semibold font-sherif mb-4">
+            Collections
+          </span>
+          <div className="StreamBox">
+            {all_movie_data.map((movie) => {
+              return <MovieCards key={movie.id} MovieDetails={movie} />;
+            })}
+          </div>
+        </div> */}
+      {/* </div> */}

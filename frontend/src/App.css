@@ -1,0 +1,748 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.SidePaneCollapse {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  align-items: center;
+  background-color: #181f3b;
+  width: 5%;
+  height: 100vh;
+  transition: all 0.5s ease;
+  z-index: 20;
+  position: fixed;
+}
+
+.SidePaneCollapse::-webkit-scrollbar {
+  display: none;
+  transition: all 0.5s ease;
+}
+
+.Expand {
+  width: 15%;
+}
+
+.SidePaneExpand::-webkit-scrollbar {
+  display: none;
+}
+
+
+.S-Arrow {
+  height: 100vh;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  position: fixed;
+  left: 4rem;
+}
+
+.ArrowExpand {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  right: 20px;
+  color: white;
+  background-color: #181f3b;
+  cursor: pointer;
+  border-right: 2px solid white;
+  border-radius: 50%;
+  transition: all 0.5 ease;
+}
+
+.Collapse {
+  transform: rotate(180deg);
+  transition: all 0.5s ease;
+}
+
+.Title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #05a3f5;
+  font-size: 35px;
+  font-weight: 600;
+  background: -webkit-linear-gradient(#a94acf, #5a77d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 25px;
+  width: 100%;
+}
+
+.SidePaneCollapse .Title h3 {
+  display: none;
+}
+
+.SidePaneCollapse.Expand .Title h3 {
+  display: inline-block;
+}
+
+.NavBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 25px;
+  width: 100%;
+}
+
+.SidePaneCollapse .NavBar .NavOps {
+  width: 90%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: lightgrey;
+  font-weight: 400;
+  box-sizing: border-box;
+  padding: 25px 30px 25px 30px;
+
+}
+
+.SidePaneCollapse.Expand .NavBar .NavOps {
+  justify-content: flex-start;
+
+}
+
+.NavBar .NavOps:hover {
+  box-sizing: border-box;
+  background-color: white;
+  border-radius: .4rem;
+  cursor: pointer;
+  color: #1e2645;
+}
+
+.SidePaneCollapse .NavBar .NavText {
+  display: none;
+}
+
+.SidePaneCollapse.Expand .NavBar .NavText {
+  display: inline-block;
+}
+
+.NavBar .NavOps div .NavIcons {
+  height: 20px;
+  width: 20px;
+}
+
+.FooterBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 47px;
+  width: 100%;
+  color: lightgrey;
+  padding-bottom: 10px;
+  margin-top: auto;
+}
+
+.SidePaneCollapse .FooterBox {
+  display: none;
+}
+
+.SidePaneCollapse.Expand .FooterBox {
+  display: flex;
+}
+
+.Header{
+  height: 10vh;
+  width: 90vw;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  left: 6rem;
+  top: 1rem;
+  /* margin-top: 0.625rem; */
+  color: white;
+  z-index: 10;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 180px;
+  height: 40px;
+  border-radius:10px;
+  overflow:hidden;
+  top: 0.2rem;
+  cursor: pointer;
+}
+
+.switch .HCheck { 
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .6s;
+  transition: .6s;
+  background-color: #1b2444;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 80%;
+  width: 45%;
+  left: 4px;
+  bottom: 4px;
+  /* background-color: #1fa17f; */
+  background-image:linear-gradient(to right, #9333ea, #4f46e5, #1d4ed8);
+  -webkit-transition: .6s;
+  transition: .6s;
+  border-radius:7px;
+  overflow:hidden;
+}
+
+.slideTo{
+  padding:0 15px;
+  position:relative;
+  bottom:15px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.HCheck:checked + .slider:before {
+  -webkit-transform: translateX(90px);
+  -ms-transform: translateX(90px);
+  transform: translateX(90px);
+}
+
+.Shows-Movies{
+  height: auto;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: absolute;
+  left: 5rem;
+  top: 10%;
+} 
+
+.Shows-Movies::-webkit-scrollbar {
+  display: none;
+}
+
+.Show {
+  display: flex;
+  flex-flow: column;
+  height: 90vh;
+  width: 90vw;
+  /* border: 2px solid white; */
+  padding: 0 2rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /* position: absolute; */
+  /* left: 10rem;
+  top: 10%; */
+}
+
+.Show::-webkit-scrollbar {
+  display: none;
+}
+
+.Discover {
+  height: 65%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+input[type="date"] {
+  position: relative;
+}
+
+input[type="date"]:before {
+  content: attr(placeholder);
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 15px;
+  bottom: 0;
+  background: #0b122e;
+  pointer-events: none;
+  line-height: 1.5;
+  padding: 0 0.5rem;
+}
+
+input[type="date"]:focus:before,
+input[type="date"]:not([value=""]):before
+{
+  display: none;
+}
+
+input[type="time"] {
+  position: relative;
+}
+
+input[type="time"]:before {
+  content: attr(placeholder);
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 15px;
+  bottom: 0;
+  background: #0b122e;
+  pointer-events: none;
+  line-height: 1.5;
+  padding: 0 0.5rem;
+}
+
+input[type="time"]:focus:before,
+input[type="time"]:not([value=""]):before
+{
+  display: none;
+}
+
+.BookingDetails {
+  height: 100%;
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: #1d2547;
+  color: lightgray;
+  padding: 20px;
+}
+
+.StreamBox {
+  /* visibility: hidden; */
+  height: 20rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow-x: scroll;
+  /* overflow-y: hidden; */
+}
+
+.StreamBox::-webkit-scrollbar {
+  display: none;
+}
+
+.TheatreBox {
+  height: 85vh;
+  width: 90vw;
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  left: 6.5rem;
+  top: 12%;
+}
+
+.TheatreBox::-webkit-scrollbar {
+  display: none;
+}
+
+.T-Card-Box {
+  height: 30%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow-x: scroll;
+  cursor: pointer;
+}
+
+.T-Card-Box::-webkit-scrollbar {
+  display: none;
+}
+
+.T-Cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  height: 100%;
+  width: 45%;
+  background-image: linear-gradient(to right, #9333ea, #4f46e5, #1d4ed8);
+  color: white;
+  cursor: pointer;
+  margin: 1.5% 1.5% 0 0;
+  border-radius: 10px;
+  padding: 0.5% 2%;
+}
+
+.BtnActive{
+  background-image: linear-gradient(to right, #9333ea, #4f46e5, #1d4ed8);
+}
+
+.T-Pics {
+  height: 70%;
+  width: 100%;
+  border: 2px solid white;
+  display: flex;
+  align-self: flex-end;
+  border-radius: 10px;
+  overflow:hidden;
+}
+
+.TimeIco{
+  position:absolute;
+  left:75%;
+  top:3%; 
+  font-size: x-large;
+  color: white;
+  cursor:pointer; 
+}
+
+.T-Time{
+  height: 70%;
+  width: 70%;
+  position: absolute;
+  padding: 2% 1%;
+  /* border: 2px solid red; */
+}
+
+.T-Seates{
+  height: 70%;
+  width: 78%;
+  display: grid;
+  grid-template:repeat(7,12.5%) 40px/repeat(20,5%) ;
+  position: absolute;
+  left: 2px;
+  /* border: 2px solid red; */
+}
+
+.Seat{
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* align-items: center; */
+  padding: 2px 2px;
+}
+
+.A.Seat{
+  grid-area: 1/1/5/5;
+  /* background-color: white; */
+}
+
+.B.Seat{
+  grid-area: 1/6/5/16;
+  /* background-color: white; */
+}
+
+.C.Seat{
+  grid-area: 1/17/5/21;
+  /* background-color: white; */
+}
+
+.D.Seat{
+  grid-area: 6/1/7/5;
+  /* background-color: white; */
+}
+
+.E.Seat{
+  grid-area: 6/6/8/16;
+  /* background-color: white; */
+}
+
+.F.Seat{
+  grid-area: 6/17/7/21;
+  /* background-color: white; */
+}
+
+.G.Seat{
+  grid-area: 8/8/9/14;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.T-Fills {
+  height: 100%;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: auto;
+  border: 1px solid white;
+  border-radius: 10px;
+  color: white;
+}
+
+.T-Fills .Search{
+  height: 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 7px 10px;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 0 0.5rem;
+  background-color: transparent;
+}
+
+.T-Fills .Sort{
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 7px 10px;
+  border-bottom: 1px dashed white;
+}
+
+.T-Fills .Tickets{
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  /* align-items: ; */
+  margin: 7px 10px;
+  /* border: 1px solid white; */
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.MovieBox {
+  /* visibility: hidden; */
+  height: 100vh;
+  width: 70vw;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: hidden;
+}
+
+.MovieBox::-webkit-scrollbar {
+  display: none;
+}
+
+.MovieCards {
+  height: 12rem;
+  width: 25rem;
+  display: flex;
+  justify-content: center;
+  margin: 10px 2px;
+  border: 2px solid lightgrey;
+  border-radius: 2%;
+  padding-left: 2px;
+  color: lightgray;
+}
+
+.MoviePlayer{
+  height: 60vh;
+  width: 25vw;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 5rem;
+  left: 55rem;
+  border: 2px solid white;
+  border-radius: 10px;
+  overflow: hidden;
+  color: white;
+}
+
+.Player{
+  height: 50%;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.Details{
+  height: 50%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 0 2%;
+}
+
+.SearchBar {
+  width: 75%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  background-color: #181f3b;
+  /* border: 1px solid white; */
+  position: relative;
+  left: 14.5rem;
+  border-radius: 10px;
+  padding: 0px 10px;
+  z-index: 20;
+}
+
+.SearchBar .Ops {
+  width: 16%;
+  height: 60%;
+  color: white;
+  background-image: linear-gradient(to right, #9333ea, #4f46e5, #1d4ed8);
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 0 5px;
+  outline: none;
+}
+
+.SearchBar .SearchOps {
+  width: 16%;
+  position: absolute;
+  background-color: #181f3b;
+  margin-top: 10px;
+  border: 1px solid white;
+  border-radius: 8px;
+  padding: 5px 0px;
+  z-index: 1;
+}
+
+.SearchBar .SearchOps:hover {
+  cursor: pointer;
+  background-color: #1e2645;
+}
+
+.Shimmer {
+  height: 25rem;
+  width: 13rem;
+  margin: 10px 2px;
+  background-color: lightgrey;
+}
+
+.AboutBox {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: scroll;
+  padding: 2rem;
+  width: 85vw;
+  height: 100vh;
+  text-align: justify;
+  color: white;
+  position: absolute;
+  left: 9rem;
+}
+
+.AboutBox::-webkit-scrollbar {
+  display: none;
+}
+
+.ContactBox {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  overflow: scroll;
+  margin: auto;
+  padding: 20px 10px;
+  width: 75%;
+  height: 85vh;
+  text-align: center;
+  color: white;
+}
+
+.ContactBox form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* border: 2px solid black; */
+  height: 50vh;
+  width: 50%;
+  margin: auto;
+  text-align: left;
+}
+
+.form {
+  margin: 10px auto;
+  width: 100%
+}
+
+.ContactBox input {
+  height: 40px;
+}
+
+.ContactBox textarea {
+  height: 120px;
+}
+
+.ContactBox button {
+  outline: none;
+  background-image: linear-gradient(to right, #9333ea, #4f46e5, #1d4ed8);
+  height: 60px;
+}
+
+.ContactBox button:hover {
+  background-image: linear-gradient(to right, #9029f0, #3a31e4, #1951eb);
+}
+
+.ContactBox::-webkit-scrollbar {
+  display: none;
+}
+
+.Toggler {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  border-radius:10px;
+  overflow:hidden;
+  top: 0.2rem;
+  cursor: pointer;
+}
+
+.Toggler .TCheck { 
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+
+.Theme {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .6s;
+  transition: .6s;
+  background-color: #212c52;
+}
+
+.Theme:before {
+  position: absolute;
+  content: "";
+  height: 80%;
+  width: 45%;
+  left: 4px;
+  bottom: 4px;
+  background-image:linear-gradient(to right, #9333ea, #4f46e5, #1d4ed8);
+  -webkit-transition: .6s;
+  transition: .6s;
+  border-radius:7px;
+  overflow:hidden;
+}
+
+.ThemeTo{
+  padding:0 15px;
+  position:relative;
+  bottom:15px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.TCheck:checked + .Theme:before {
+  -webkit-transform: translateX(50px);
+  -ms-transform: translateX(50px);
+  transform: translateX(50px);
+}
+
