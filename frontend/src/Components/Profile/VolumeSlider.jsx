@@ -6,7 +6,7 @@ import { FaVolumeLow,FaVolumeHigh } from "react-icons/fa6";
 // import VolumeDown from '@mui/icons-material/VolumeDown';
 // import VolumeUp from '@mui/icons-material/VolumeUp';
 
-export default function ContinuousSlider() {
+export default function VolumeSlider() {
   const [value, setValue] = React.useState(30);
 
   const handleChange = (event, newValue) => {

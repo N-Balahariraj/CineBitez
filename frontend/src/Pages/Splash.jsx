@@ -1,29 +1,34 @@
 import React, { useState } from "react";
-import { Movie_Data } from "../Common/Movie_Data";
-import ReactPlayer from "react-player";
 import { useNavigate } from "react-router-dom";
+import ReactPlayer from "react-player";
+
+import Spotlight from "../Components/Cards/Spotlight";
+
+import { Movie_Data } from "../Data/Movie_Data";
+
 import { CiBank } from "react-icons/ci";
 import { BiMoviePlay } from "react-icons/bi";
 
-export default function Discover({ chosenTrailer, ShowsToTheatres }) {
+export default function Splash({ setMovie, filteredSpotlights }) {
   const navigate = useNavigate();
-  const [Date,setDate] = useState("");
-  const [Time,setTime] = useState("")
+  const [Date, setDate] = useState("");
+  const [Time, setTime] = useState("");
+  const [trailer, setTrailer] = useState(1);
   return (
-    <>
-      <span className="text-white font-semibold text-4xl mb-3.5 ">
+    <section className="splash">
+      <h2 className="discover-title">
         Discover
-      </span>
-      <div className="Discover ml-3">
-        <div className="BookedMovie h-[100%] w-[62%] rounded-lg overflow-hidden">
+      </h2>
+      <section className="discover">
+        <div className="discover__player">
           <ReactPlayer
-            url={Movie_Data[chosenTrailer - 1].trailers[0]}
+            url={Movie_Data[trailer - 1].trailers[0]}
             controls={true}
             width="100%"
             height="100%"
           />
         </div>
-        <form className="BookingDetails rounded-md">
+        <form className="discover__form">
           <span>Get Ticket</span>
           <div className=" flex justify-between content-center bg-[#0b122e] rounded-2xl h-[35px] px-3">
             <input
@@ -33,7 +38,7 @@ export default function Discover({ chosenTrailer, ShowsToTheatres }) {
             />
             <BiMoviePlay
               onClick={() => {
-                navigate("/Movies");
+                navigate("/movies");
               }}
               className="mt-2 h-[23px] w-[23px] hover:cursor-pointer"
             />
@@ -46,7 +51,7 @@ export default function Discover({ chosenTrailer, ShowsToTheatres }) {
             />
             <CiBank
               onClick={() => {
-                ShowsToTheatres(1);
+                navigate("/theatres")
               }}
               className="mt-2 h-[25px] w-[25px] hover:cursor-pointer"
             />
@@ -56,14 +61,18 @@ export default function Discover({ chosenTrailer, ShowsToTheatres }) {
               type="date"
               placeholder="Choose date"
               value={Date}
-              onChange={(e)=>{setDate(e.target.value)}}
+              onChange={(e) => {
+                setDate(e.target.value);
+              }}
               className="dateclass placeholderclass outline-none bg-[#0b122e] rounded-2xl h-[35px] w-[47%] text-center px-3"
             />
             <input
               type="time"
               placeholder="Choose time"
               value={Time}
-              onChange={(e)=>{setTime(e.target.value)}}
+              onChange={(e) => {
+                setTime(e.target.value);
+              }}
               className="dateclass placeholderclass outline-none bg-[#0b122e] rounded-2xl h-[35px] w-[47%] text-center px-3"
             />
           </div>
@@ -71,7 +80,21 @@ export default function Discover({ chosenTrailer, ShowsToTheatres }) {
             Book Now
           </button>
         </form>
-      </div>
-    </>
+      </section>
+      <h2 className="spotlights-title">SpotLights</h2>
+      <section className="spotlights scrollbar-hide">
+        {filteredSpotlights.map((spotlight) => {
+          return (
+            <Spotlight
+              key={spotlight.id}
+              id={spotlight.id}
+              MovieDetails={spotlight}
+              setTrailer={setTrailer}
+              setMovie={setMovie}
+            />
+          );
+        })}
+      </section>
+    </section>
   );
 }

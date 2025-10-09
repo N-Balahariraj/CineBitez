@@ -4,13 +4,13 @@ import { RiMovieLine } from "react-icons/ri";
 import { BsBookmarkPlus } from "react-icons/bs";
 import { IoStarSharp } from "react-icons/io5";
 
-export default function StreamCards(props) {
+export default function Spotlight(props) {
   // const { movie, rating, imageUrl, imdb_url  } = props.MovieDetails
   const { imageUrl, movie, theme, rating, Votes } = props.MovieDetails;
 
   return (
     // <>
-    <div className=" h-[12rem] w-[22rem] flex ml-3 border-1 rounded-md">
+    <div className={`spotlight ${props.tailwind}`}>
       <div className="h-[100%] w-[45%] rounded-lg">
         <img
           src={imageUrl}
@@ -20,7 +20,7 @@ export default function StreamCards(props) {
       </div>
       <div className="h-[100%] w-[55%] flex flex-col justify-around box-border p-2 text-[lightgrey] text-sm">
         <div className="flex justify-between items-center">
-          <span className="whitespace-nowrap text-white text-lg font-medium w-[100%] overflow-hidden">
+          <span className="whitespace-nowrap text-white text-lg font-medium w-[100%] overflow-x-auto scrollbar-hide">
             {movie}
           </span>
         </div>
@@ -44,7 +44,7 @@ export default function StreamCards(props) {
         <div className="flex justify-between">
           <button
             onClick={(e) => {
-              props.Trailer(props.id);
+              props.setTrailer(props.id);
             }}
             className="flex justify-around items-center h-7 w-20 text-white rounded box-border bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 outline-none hover:brightness-90"
           >
@@ -53,8 +53,7 @@ export default function StreamCards(props) {
           <Link
             className="flex justify-around items-center h-7 w-20 text-white rounded box-border bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 outline-none hover:brightness-90"
             onClick={() => {
-              props.StreamingToTheatresViaShows(1);
-              props.FromStreaming(props.id)
+              props.setMovie(props.id);
             }}
           >
             Book <BsBookmarkPlus />
