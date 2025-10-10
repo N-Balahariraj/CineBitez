@@ -12,20 +12,16 @@ function Movies({ setSelectedMovie, filteredMovies }) {
       <div className="movies">
         <VideoPlayer player={player} setSelectedMovie={setSelectedMovie} />
         <div className="flex flex-wrap justify-center gap-2">
-          {filteredMovies.length === 0 ? (
-            <Shimmer />
-          ) : (
-            filteredMovies.map((movie) => {
-              return (
-                <Movie
-                  key={movie.id}
-                  id={movie.id}
-                  MovieDetails={movie}
-                  setPlayer={setPlayer}
-                />
-              );
-            })
-          )}
+          {filteredMovies?.map((movie) => {
+            return (
+              <Movie
+                key={movie.id}
+                id={movie.id}
+                MovieDetails={movie}
+                setPlayer={setPlayer}
+              />
+            );
+          }) ?? <Shimmer />}
         </div>
       </div>
     </>
