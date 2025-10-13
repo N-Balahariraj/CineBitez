@@ -8,6 +8,7 @@ import HeaderNav from "./Components/Navbar/HeaderNav.jsx";
 import MainNav from "./Components/Navbar/MainNav.jsx";
 import { Theatre_Data } from "./Data/Theatre_Data.js";
 import { Movie_Data } from "./Data/Movie_Data.js";
+import Authenticate from "./Pages/Authenticate.jsx";
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState("splash");
@@ -27,6 +28,7 @@ export default function App() {
         />
         <main className="main-content scrollbar-hide">
           <Routes>
+            <Route path="/auth" element={<Authenticate/>} />
             <Route
               path="/"
               element={
