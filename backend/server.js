@@ -27,3 +27,4 @@ app.listen(port,()=>{
 
 // Connecting Routes
 require('./routes/user.route.js')(app)
+require('./routes/movie.route.js')(app)

@@ -3,7 +3,7 @@ const validator = require('validator'); // For URL validation
 
 const movieSchema = new mongoose.Schema({
     id: { 
-        type: String, 
+        type: Number, 
         unique: true,
         required: [true, 'Movie ID is required.'],
         trim: true
@@ -35,7 +35,7 @@ const movieSchema = new mongoose.Schema({
         type: [String],
         required: [true, 'At least one genre is required.'],
         enum: {
-            values: ['Action', 'Comedy', 'Period', 'Drama', 'Thriller', 'Horror', 'Sci-Fi', 'Fantasy', 'Romance', 'Animation'], // Extend as needed
+            values: ['Action', 'Comedy', 'Period', 'Drama', 'Thriller', 'Horror', 'Sci-Fi', 'Fantasy', 'Romance', 'Animation', 'Crime', 'Adventure', 'Musical'], // Extend as needed
             message: '"{VALUE}" is not a supported theme/genre.'
         },
         trim: true
@@ -50,18 +50,15 @@ const movieSchema = new mongoose.Schema({
     votes: { 
         type: Number,
         default: 0,
-        set: function(v) {
-            if (typeof v === 'string') {
-                const num = parseFloat(v.replace('K', '')) * 1000;
-                return isNaN(num) ? 0 : num;
-            }
-            return v;
+        set: v => {
+            if(v.includes('K') || v.includes('k')) return parseFloat(v) * 1_000;
+            if( v.includes('M') || v.includes('m')) return parseFloat(v) * 1_000_000;
+            return parseFloat(v);
         },
-        get: function(v) {
-            if (v >= 1000) {
-                return (v / 1000).toFixed(1) + 'K';
-            }
-            return v.toString();
+        get: v => {
+            if(Math.floor(v / 1_000_000)) return (v/1_000_000).toFixed(2)+"M";
+            if(Math.floor(v / 1_000)) return (v/1_000).toFixed(2)+"K";
+            return v+""
         }
     },
     price: { 
@@ -84,7 +81,7 @@ const movieSchema = new mongoose.Schema({
         type: [String], 
         validate: {
             validator: function(arr) {
-                return arr.every(url => validator.isURL(url) && (url.includes('youtube.com') || url.includes('youtu.be')));
+                return arr.every(url => validator.isURL(url));
             },
             message: 'All trailers must be valid YouTube URLs.'
         }
@@ -98,10 +95,6 @@ const movieSchema = new mongoose.Schema({
     toJSON: { getters: true },
     toObject: { getters: true }
 });
-
-// --- Indexing ---
-movieSchema.index({ movie: 1 });
-movieSchema.index({ languages: 1 });
 
 
 const movie = mongoose.model('movies', movieSchema);
