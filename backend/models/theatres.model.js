@@ -28,10 +28,9 @@ const showSchema = new mongoose.Schema({
 
 const theatreSchema = new mongoose.Schema({
     id: { 
-        type: String,
+        type: Number,
         unique: true,
         required: [true, 'Theatre ID is required.'],
-        trim: true
     },
     name: {
         type: String,
