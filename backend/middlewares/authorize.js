@@ -1,4 +1,4 @@
-module.exports.isAdmin = function (req, res, next){
+module.exports.authorize = function (req, res, next){
     if(req.user?.role === "admin")
         return next();
     
