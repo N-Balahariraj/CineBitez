@@ -10,6 +10,8 @@ import MovieFilters from "../Filters/MovieFilters";
 import TheatreFilters from "../Filters/TheatreFilters";
 import SplashFilters from "../Filters/SplashFilters";
 import MobileFilters from "../Filters/MobileFilters";
+import { useEffect } from "react";
+import { getAllTheatres } from "../../Apis/theatreApis";
 
 // import Account from "./Account";
 
@@ -22,6 +24,9 @@ export default function HeaderNav({
 }) {
   const location = useLocation();
   const isMobile = useMediaQuery({ query: "(max-width: 40rem)" });
+  useEffect(()=>{
+    getAllTheatres();
+  },[])
   return (
     <div className={`header-nav ${location.pathname !== "/" && "hidden"}`}>
       <div className="header-nav__item">
