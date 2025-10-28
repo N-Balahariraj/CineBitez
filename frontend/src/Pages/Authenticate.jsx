@@ -1,4 +1,4 @@
-import { authenticate } from "../Apis/authenticate";
+import { authenticate } from "../Apis/userApis";
 
 export default function Authenticate() {
   const isNewUser = false;
@@ -8,7 +8,7 @@ export default function Authenticate() {
     const username = formData.get('username');
     const email = formData.get('email');
     const password = formData.get('password');
-    const response = await authenticate(username, email, password, isNewUser);
+    const response = await authenticate({username, email, password, isNewUser});
     const userData = await response.json();
     console.log(userData);
   }

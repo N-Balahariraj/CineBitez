@@ -2,6 +2,7 @@ const user = require('../models/users.model');
 
 module.exports.isNewUser = async function(req, res, next) {
     if (req.body.isNewUser) {
+        delete req.body.isNewUser;
         return next();
     }
 
