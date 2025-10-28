@@ -82,7 +82,6 @@ const theatreSchema = new mongoose.Schema({
 });
 
 // --- Indexing ---
-theatreSchema.index({ name: 1 });
 theatreSchema.index({ location: 'text' });
 
 
