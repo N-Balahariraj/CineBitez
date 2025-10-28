@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { useEffect } from "react";
 
 import { LuPopcorn } from "react-icons/lu";
 import { Gi3DGlasses } from "react-icons/gi";
@@ -10,8 +11,9 @@ import MovieFilters from "../Filters/MovieFilters";
 import TheatreFilters from "../Filters/TheatreFilters";
 import SplashFilters from "../Filters/SplashFilters";
 import MobileFilters from "../Filters/MobileFilters";
-import { useEffect } from "react";
+
 import { getAllTheatres } from "../../Apis/theatreApis";
+import { getAllMovies } from "../../Apis/movieApis";
 
 // import Account from "./Account";
 
@@ -26,6 +28,7 @@ export default function HeaderNav({
   const isMobile = useMediaQuery({ query: "(max-width: 40rem)" });
   useEffect(()=>{
     getAllTheatres();
+    getAllMovies();
   },[])
   return (
     <div className={`header-nav ${location.pathname !== "/" && "hidden"}`}>
