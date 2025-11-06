@@ -13,6 +13,6 @@ export default function Home({ currentScreen, filteredTheatres, filteredMovies, 
     return <Theatres selectedMovie={selectedMovie} filteredTheatres={filteredTheatres}/>;
   }
   return (
-    <Splash setMovie={setSelectedMovie} filteredSpotlights={filteredSpotlights}/>
+    <Splash setSelectedMovie={setSelectedMovie} filteredSpotlights={filteredSpotlights}/>
   );
 }

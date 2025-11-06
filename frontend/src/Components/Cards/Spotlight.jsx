@@ -4,13 +4,14 @@ import { RiMovieLine } from "react-icons/ri";
 import { BsBookmarkPlus } from "react-icons/bs";
 import { IoStarSharp } from "react-icons/io5";
 
-export default function Spotlight(props) {
-  // const { movie, rating, imageUrl, imdb_url  } = props.MovieDetails
-  const { imageUrl, movie, theme, rating, Votes } = props.MovieDetails;
+export default function Spotlight({spotlight, setId, setSelectedMovie, tailwind}) {
+  // const { movie, rating, imageUrl, imdb_url  } = MovieDetails
+  // console.log("Spotllight : ",MovieDetails)
+  const { id, imageUrl, movie, genres, rating, votes } = spotlight;
 
   return (
     // <>
-    <div className={`spotlight ${props.tailwind}`}>
+    <div className={`spotlight ${tailwind}`}>
       <div className="h-[100%] w-[45%] rounded-lg">
         <img
           src={imageUrl}
@@ -25,9 +26,9 @@ export default function Spotlight(props) {
           </span>
         </div>
         <span>
-          {theme.map((T) => {
-            if (theme[theme.length - 1] === T) return T;
-            return T + " | ";
+          {genres?.map((genre) => {
+            if (genres.at(-1) === genre) return genre;
+            return genre + " | ";
           })}
         </span>
         <div>
@@ -35,7 +36,7 @@ export default function Spotlight(props) {
             <div className="w-[60%] h-[4px] bg-[#07a0fc]"></div>
           </div>
           <div className="flex justify-between text-[orange]">
-            <span>Votes {Votes}</span>
+            <span>Votes {votes}</span>
             <span className="flex flex-rowjusify-between items-center">
               {rating} <IoStarSharp />
             </span>
@@ -44,7 +45,7 @@ export default function Spotlight(props) {
         <div className="flex justify-between">
           <button
             onClick={(e) => {
-              props.setTrailer(props.id);
+              setId(id);
             }}
             className="flex justify-around items-center h-7 w-20 text-white rounded box-border bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 outline-none hover:brightness-90"
           >
@@ -53,7 +54,7 @@ export default function Spotlight(props) {
           <Link
             className="flex justify-around items-center h-7 w-20 text-white rounded box-border bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 outline-none hover:brightness-90"
             onClick={() => {
-              props.setMovie(props.id);
+              setSelectedMovie(id);
             }}
           >
             Book <BsBookmarkPlus />

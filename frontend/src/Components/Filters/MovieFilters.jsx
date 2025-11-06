@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { BiSearchAlt } from "react-icons/bi";
-import { Movie_Data } from "../../Data/Movie_Data";
+import { useGetMoviesQuery } from "../../app/api/moviesApiSlice";
 
 export default function MovieFilters({ currentScreen, setFilteredMovies }) {
+  const {data} = useGetMoviesQuery();
+
+  const {message = " ", movies : Movie_Data = []} = data || {}
+
   const [SearchInput, setSearchInput] = useState("");
   const [SelectedLanguage, setSelectedLanguage] = useState("Language");
   const [SelectedGenere, setSelectedGenere] = useState("Genere");
   const [SelectedPrice, setSelectedPrice] = useState("Pricings");
   const [SelectedRate, setSelectedRate] = useState("Ratings");
+
 
   const Languages = [
     {
@@ -66,19 +71,19 @@ export default function MovieFilters({ currentScreen, setFilteredMovies }) {
       name: "Sci-Fi",
     },
     {
-      key: 5,
+      key: 6,
       name: "Crime",
     },
     {
-      key: 6,
+      key: 7,
       name: "Comedy",
     },
     {
-      key: 7,
+      key: 8,
       name: "Romance",
     },
     {
-      key: 8,
+      key: 9,
       name: "Adventure",
     },
   ];
@@ -118,10 +123,10 @@ export default function MovieFilters({ currentScreen, setFilteredMovies }) {
   }, [SearchInput]);
 
   function filterBySearchInput() {
-    const Filter = Movie_Data.filter((Movie) => {
-      return Movie.movie.toLowerCase().includes(SearchInput.toLowerCase());
+    const filteredMovieData = Movie_Data?.filter((Movie) => {
+      return Movie?.movie.toLowerCase().includes(SearchInput.toLowerCase());
     });
-    setFilteredMovies(Filter);
+    setFilteredMovies(filteredMovieData ?? []);
   }
 
   const handleLanguageChange = (event) => {

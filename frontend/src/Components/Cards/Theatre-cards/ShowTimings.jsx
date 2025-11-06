@@ -1,14 +1,15 @@
 import React from "react";
-import { Theatre_Data } from "../../../Data/Theatre_Data";
+import { useGetTheatresQuery } from "../../../app/api/theatresApiSlice";
 
 export default function ShowTimings({ selectedTheatre }) {
+  const {data:{message = " ",theatres: Theatres_Data = []}} = useGetTheatresQuery();
   return (
     <div className="show-timings">
-      {Theatre_Data[selectedTheatre - 1].movies.map((m) => (
+      {Theatres_Data[selectedTheatre - 1].shows.map((show) => (
         <span className="block text-white font-semibold h-[20%] m-2">
-          {m.movie} :
-          {m.shows.map((s) => (
-            <span className=" border-white border-[1px] rounded-md m-2 p-2 cursor-pointer hover:brightness-95">{s}</span>
+          {show.movie} :
+          {show.showTimings.map((showTiming) => (
+            <span className=" border-white border-[1px] rounded-md m-2 p-2 cursor-pointer hover:brightness-95">{showTiming}</span>
           ))}
         </span>
       ))}

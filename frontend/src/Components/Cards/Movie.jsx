@@ -4,7 +4,7 @@ import { IoStarSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 export default function Movie(props) {
-  const { movie, rating, imageUrl, theme, Votes } = props.MovieDetails;
+  const { movie, rating, imageUrl, genres, votes } = props.MovieDetails;
   return (
     <div className="movie">
       <div className="h-[65%] w-[100%] rounded-lg">
@@ -18,14 +18,15 @@ export default function Movie(props) {
         <span className="whitespace-nowrap text-lg font-medium w-[100%] overflow-x-auto scrollbar-hide">
           {movie}
         </span>
-        <span>{theme.map((T)=>{
-          if(theme[theme.length-1] === T)
-            return T;
-          return T+" | ";
-        })}</span>
+        <span>
+          {genres?.map((genre) => {
+            if (genres.at(-1) === genre) return genre;
+            return genre + " | ";
+          })}
+        </span>
         <div className="flex justify-between text-[orange]">
           <span>
-            {Votes} Votes
+            {votes} Votes
           </span>
           <span className="flex jusify-between items-center">
             {rating}/10 <IoStarSharp />

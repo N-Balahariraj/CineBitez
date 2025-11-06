@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { TbClockPlay } from "react-icons/tb";
-import { Theatre_Data } from "../../../Data/Theatre_Data";
 // import TheatreSeats from "./ScreensAndSeats";
 import TheatreTime from "./ShowTimings";
 
@@ -24,7 +23,7 @@ export default function TheatrePreview({ selectedTheatre, filteredTheatres }) {
           src={
             // filteredTheatres.length
             //   ? filteredTheatres[0].bg :
-            Theatre_Data[selectedTheatre - 1].bg
+            filteredTheatres[selectedTheatre - 1].bg
           }
           alt="theatre"
           className={`w-[100%] h-[100%] ${opacity}`}

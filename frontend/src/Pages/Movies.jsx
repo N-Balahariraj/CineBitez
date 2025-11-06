@@ -28,4 +28,4 @@ function Movies({ setSelectedMovie, filteredMovies }) {
   );
 }
 
-export default forwardRef(Movies);
+export default Movies;

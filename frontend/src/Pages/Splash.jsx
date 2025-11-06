@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPlayer from "react-player";
 
 import Spotlight from "../Components/Cards/Spotlight";
 
-import { Movie_Data } from "../Data/Movie_Data";
-
 import { CiBank } from "react-icons/ci";
 import { BiMoviePlay } from "react-icons/bi";
 
-export default function Splash({ setMovie, filteredSpotlights }) {
+export default function Splash({ setSelectedMovie, filteredSpotlights }) {
   const navigate = useNavigate();
   const [Date, setDate] = useState("");
   const [Time, setTime] = useState("");
@@ -22,7 +20,7 @@ export default function Splash({ setMovie, filteredSpotlights }) {
       <section className="discover">
         <div className="discover__player">
           <ReactPlayer
-            url={Movie_Data[trailer - 1].trailers[0]}
+            url={filteredSpotlights?.[trailer]?.trailers[0]}
             controls={true}
             width="100%"
             height="100%"
@@ -83,14 +81,13 @@ export default function Splash({ setMovie, filteredSpotlights }) {
       </section>
       <h2 className="spotlights-title">SpotLights</h2>
       <section className="spotlights scrollbar-hide">
-        {filteredSpotlights.map((spotlight) => {
+        {filteredSpotlights?.map((spotlight) => {
           return (
             <Spotlight
               key={spotlight.id}
-              id={spotlight.id}
-              MovieDetails={spotlight}
+              spotlight={spotlight}
               setTrailer={setTrailer}
-              setMovie={setMovie}
+              setSelectedMovie={setSelectedMovie}
             />
           );
         })}

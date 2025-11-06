@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema(
     // --- Profile Information ---
     avatar: {
       type: String,
-      default: "default-avatar.png",
+      default: "ProfileIcon.jpg",
     },
     bio: {
       type: String,
@@ -90,7 +90,7 @@ const userSchema = new mongoose.Schema(
     // --- System & Role Fields ---
     role: {
       type: String,
-      enum: ["user", "admin", "moderator"],
+      enum: ["user", "admin", "operator"],
       default: "user",
     },
     lastLogin: {

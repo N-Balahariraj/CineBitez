@@ -41,34 +41,48 @@ module.exports = {
 
   async editAccount(req, res) {
     const username = req.params.name;
+    console.log("editAccount username:", username);
+    console.log("updated user payload:", req.body);
+
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).send({ message: "No update data provided" });
+    }
+
     try {
-      const account = await user.findOneAndUpdate({username}, req.body, {
+      const account = await user.findOneAndUpdate({ username }, req.body, {
         new: true,
         runValidators: true,
       });
-      res.send({ message: "Updated user successfully", account });
+
+      if (!account) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      return res.status(200).send({ message: "Updated user successfully", user: account });
     } 
     catch (error) {
       console.error(error);
       if (error.code === 11000) {
-        return res
-          .status(409)
-          .send({ message: "An user with this username/email already exists." });
+        return res.status(409).send({ message: "An user with this username/email already exists." });
       }
-      res.status(500).send({ message: "Error editing user", error });
+      return res.status(500).send({ message: "Error editing user", error });
     }
   },
 
   async removeAccount(req, res) {
     const username = req.params.name;
     try {
-      const account = await user.findOneAndDelete(username);
-      res.status(200).send({
+      const account = await user.findOneAndDelete({ username }); // pass filter object
+      if (!account) {
+        return res.status(404).send({ message: "User not found" });
+      }
+      return res.status(200).send({
         message: `${account.username}'s account deleted successfully`,
       });
     } 
     catch (error) {
-      res.status(500).send({ message: "Error deleting Account", error });
+      console.error(error);
+      return res.status(500).send({ message: "Error deleting Account", error });
     }
   },
 };

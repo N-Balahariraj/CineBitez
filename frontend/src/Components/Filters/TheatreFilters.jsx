@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbCurrentLocation } from "react-icons/tb";
-import { Theatre_Data } from "../../Data/Theatre_Data";
-import { Movie_Data } from "../../Data/Movie_Data";
+import { useGetTheatresQuery } from "../../app/api/theatresApiSlice";
 
 export default function TheatreFilters({ currentScreen, setFilteredTheatres, Movie }) {
+  const {data} = useGetTheatresQuery();
+  const {message = " ", theatres: Theatres_Data = []} = data || {}
   const [SearchInput, setSearchInput] = useState("");
   const [RateOrder, setRateOrder] = useState("reset");
   const RateBtn = document.getElementById("RateBtn");
   const [PriceOrder, setPriceOrder] = useState("reset");
   const PriceBtn = document.getElementById("PriceBtn");
-  const DescendingRate = Array.from(Theatre_Data).sort(
+  const DescendingRate = Array.from(Theatres_Data).sort(
     (a, b) => b.rate - a.rate
   );
-  const AscendingPrice = Array.from(Theatre_Data).sort(
+  const AscendingPrice = Array.from(Theatres_Data).sort(
     (a, b) => a.price - b.price
   );
 
   function filterTheatre() {
-    const Filter = Theatre_Data.filter((Theatre) => {
-      return Theatre.name.toLowerCase().includes(SearchInput.toLowerCase());
+    const Filter = Theatres_Data?.filter((Theatre) => {
+      return Theatre?.name.toLowerCase().includes(SearchInput.toLowerCase());
     });
     setFilteredTheatres(Filter);
   }
@@ -31,7 +32,7 @@ export default function TheatreFilters({ currentScreen, setFilteredTheatres, Mov
       setFilteredTheatres(DescendingRate);
     } else {
       setRateOrder("reset");
-      setFilteredTheatres(Theatre_Data);
+      setFilteredTheatres(Theatres_Data);
     }
   };
 
@@ -42,7 +43,7 @@ export default function TheatreFilters({ currentScreen, setFilteredTheatres, Mov
       setFilteredTheatres(AscendingPrice);
     } else {
       setPriceOrder("reset");
-      setFilteredTheatres(Theatre_Data);
+      setFilteredTheatres(Theatres_Data);
     }
   };
 

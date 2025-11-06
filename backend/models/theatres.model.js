@@ -13,7 +13,7 @@ const showSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
-    shows: {
+    showTimings: {
         type: [String],
         required: [true, 'At least one show time is required.'],
         validate: {
@@ -74,7 +74,7 @@ const theatreSchema = new mongoose.Schema({
             message: 'All picture URLs must be valid.'
         }
     },
-    movies: [showSchema] 
+    shows: [showSchema] 
 }, {
     timestamps: true, 
     toJSON: { getters: true },

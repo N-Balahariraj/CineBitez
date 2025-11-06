@@ -1,20 +1,60 @@
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Home from "./Pages/Home.jsx";
 import About from "./Pages/About.jsx";
 import Contact from "./Pages/Contact.jsx";
 import Profile from "./Pages/Profile.jsx";
 import HeaderNav from "./Components/Navbar/HeaderNav.jsx";
 import MainNav from "./Components/Navbar/MainNav.jsx";
-import { Theatre_Data } from "./Data/Theatre_Data.js";
-import { Movie_Data } from "./Data/Movie_Data.js";
 import Authenticate from "./Pages/Authenticate.jsx";
+import { useGetMoviesQuery } from "./app/api/moviesApiSlice.js";
+import { useGetTheatresQuery } from "./app/api/theatresApiSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "./app/features/authSlice.js";
 
 export default function App() {
+  const {
+    data: movieData = {},
+    isError: movieDataError,
+    isLoading: movieDataLoading,
+  } = useGetMoviesQuery();
+  const {
+    data: theatreData = {},
+    isError: theatreDataError,
+    isLoading: theatreDataLoading,
+  } = useGetTheatresQuery();
+
+  const { message: movieDataStatus = " ", movies: Movies_Data = [] } =
+    movieData || {};
+  const { message: theatreDataStatus = " ", theatres: Theatres_Data = [] } =
+    theatreData || {};
+  const { message: userDataStatus = " ", user: User_Data = {} } = JSON.parse(
+    localStorage.getItem("user") 
+  )|| {};
+
   const [currentScreen, setCurrentScreen] = useState("splash");
-  const [filteredTheatres, setFilteredTheatres] = useState(Theatre_Data);
-  const [filteredMovies, setFilteredMovies] = useState(Movie_Data);
-  const [filteredSpotlights, setFilteredSpotlights] = useState(Movie_Data);
+  const [filteredTheatres, setFilteredTheatres] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+  const [filteredSpotlights, setFilteredSpotlights] = useState([]);
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  console.log("movieData : ",Movies_Data)
+  // console.log("theatreData : ",Theatres_Data)
+
+
+  useEffect(() => {
+    if (Movies_Data) {
+      setFilteredSpotlights(Movies_Data);
+      setFilteredMovies(Movies_Data);
+    }
+    if (Theatres_Data) {
+      setFilteredTheatres(Theatres_Data);
+    }
+    if (Object.keys(User_Data).length) {
+      dispatch(authActions.login(User_Data));
+    }
+  }, []);
 
   return (
     <>
@@ -28,7 +68,6 @@ export default function App() {
         />
         <main className="main-content scrollbar-hide">
           <Routes>
-            <Route path="/auth" element={<Authenticate/>} />
             <Route
               path="/"
               element={
@@ -42,7 +81,10 @@ export default function App() {
             />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/Profile" element={<Profile />} />
+            <Route
+              path="/Profile"
+              element={isAuthenticated ? <Profile /> : <Authenticate />}
+            />
           </Routes>
         </main>
         <MainNav />

@@ -19,11 +19,11 @@
     rgba(169, 74, 207, 0.4),
     rgba(90, 119, 212, 0.4)
   );
-  
+
   --standard-border-radius: 10px;
 }
 
-.light-theme{
+.light-theme {
   --primary-bg-color: #fff;
   --alpha-bg-color: rgba(0, 0, 0, 0.05);
   --primary-text-color: #0b122e;
@@ -52,8 +52,7 @@ body {
 }
 
 .background {
-  background: var(--bg-image) 0 0 / auto 40% no-repeat
-      border-box,
+  background: var(--bg-image) 0 0 / auto 40% no-repeat border-box,
     var(--primary-bg-color);
   width: 100%;
   height: 100%;
@@ -65,8 +64,7 @@ body {
 
 @media (min-width: 40rem) {
   .background {
-    background: var(--bg-image) 0 0 / 100% 50% no-repeat
-        border-box,
+    background: var(--bg-image) 0 0 / 100% 50% no-repeat border-box,
       var(--primary-bg-color);
   }
 }
@@ -77,6 +75,58 @@ body {
   grid-template-rows: 4rem 1fr 4rem 4rem;
 }
 
+.notification {
+  /* display: flex; */
+  position: fixed;
+  /* height: auto; */
+  width: 20rem;
+  margin-right: 5%;
+  top: 2rem;
+  padding: 0.5rem;
+  /* border: 1px solid rgba(204, 29, 24, 1); */
+  border-radius: var(--standard-border-radius);
+  background: var(--alpha-linear-gradient);
+  backdrop-filter: blur(9.6px);
+  color: var(--primary-text-color);
+}
+
+.notification__close {
+  width: 100%;
+  text-align: end;
+}
+
+.notification__head {
+  font-size: larger;
+}
+
+.notification__timer,
+.notification_timer {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px; 
+  border-radius: 4px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.notification__timer::-webkit-progress-bar,
+.notification_timer::-webkit-progress-bar {
+  background: rgba(255,255,255,0.12);
+}
+
+.notification__timer::-webkit-progress-value,
+.notification_timer::-webkit-progress-value {
+  background: var(--secondary-linear-gradient);
+}
+
+.notification__timer::-moz-progress-bar,
+.notification_timer::-moz-progress-bar {
+  background: var(--secondary-linear-gradient);
+}
+
+.notification__timer::-webkit-progress-value { border-radius: 5px; }
+.notification__timer::-moz-progress-bar { border-radius: 5px; }
 
 /* Header Navbar */
 
@@ -244,6 +294,10 @@ body {
   border-radius: var(--standard-border-radius);
   background-image: var(--primary-linear-gradient);
   cursor: pointer;
+}
+
+.authenticate__btn-submit:hover {
+  background-image: var(--secondary-linear-gradient);
 }
 
 /* Splash */

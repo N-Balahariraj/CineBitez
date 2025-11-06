@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Movie_Data } from "../Data/Movie_Data";
 import Theatre from "../Components/Cards/Theatre-cards/Theatre";
 import TheatrePreview from "../Components/Cards/Theatre-cards/TheatrePreview";
 import Spotlight from "../Components/Cards/Spotlight";
 import { useMediaQuery } from 'react-responsive'
+import { useGetMoviesQuery } from "../app/api/moviesApiSlice";
 
 export default function Theatres({ selectedMovie, filteredTheatres }) {
+  const {data: {_, movies : Movie_Data}} = useGetMoviesQuery();
   const [selectedTheatre, setSelectedTheatre] = useState(1);
 
   // Here the searchText changes even on firstLoad/Reload of a page.
@@ -23,7 +24,7 @@ export default function Theatres({ selectedMovie, filteredTheatres }) {
         />
         <div className="selection-info">
           {
-            !isMobile && <Spotlight MovieDetails={Movie_Data[selectedMovie-1]} tailwind={"max-w-[none]"}/>
+            !isMobile && <Spotlight spotlight={Movie_Data[selectedMovie-1]} tailwind={"max-w-[none]"}/>
           }
           <div className="selection-info__theatre">
             <span>Theatre</span>

@@ -13,7 +13,7 @@ export default function ThemeToggler() {
 
   return (
     <>
-    <label class="Toggler">
+    <label className="Toggler">
         <input type="checkbox" className="TCheck" onChange={toggleTheme}/>
         <span className="Theme"></span>
         <div className="ThemeTo">
