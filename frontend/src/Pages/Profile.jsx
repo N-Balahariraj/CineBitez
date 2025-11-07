@@ -2,16 +2,23 @@ import React, { useState, useEffect } from "react";
 import { FiEdit, FiLogOut, FiTwitter } from "react-icons/fi";
 import { FaInstagram, FaFacebookF, FaRegSave } from "react-icons/fa";
 import { MdOutlinePhotoCamera } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import VolumeSlider from "../Components/Profile/VolumeSlider";
 import ThemeToggler from "../Components/Profile/ThemeToggler";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../app/features/authSlice";
-import { useEditProfileMutation } from "../app/api/usersApiSlice";
+import { notifyActions } from "../app/features/notificationSlice";
+import {
+  useEditProfileMutation,
+  useRemoveAccountMutation,
+} from "../app/api/usersApiSlice";
 
 export default function Profile() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const [editProfile, { isLoading, isError, error, data }] = useEditProfileMutation();
+  const [editProfile, editProfileResponse] =
+    useEditProfileMutation();
+  const [removeAccount, removeAccountResponse] = useRemoveAccountMutation();
 
   const [InputState, setInputState] = useState(true);
   const [ButtonState, setButtonState] = useState("Edit");
@@ -46,7 +53,10 @@ export default function Profile() {
     const { name, value } = e.target;
     if (name.startsWith("socials.")) {
       const key = name.split(".")[1];
-      setProfileForm((p) => ({ ...p, socials: { ...p.socials, [key]: value } }));
+      setProfileForm((p) => ({
+        ...p,
+        socials: { ...p.socials, [key]: value },
+      }));
     } else {
       setProfileForm((p) => ({ ...p, [name]: value }));
     }
@@ -55,9 +65,12 @@ export default function Profile() {
   async function handleSubmit(e) {
     if (e && e.preventDefault) e.preventDefault();
     try {
-      console.log("Profile form : ",profileForm)
-      const username = profileForm.username
-      const userData = await editProfile({username, user: profileForm}).unwrap();
+      console.log("Profile form : ", profileForm);
+      const username = profileForm.username;
+      const userData = await editProfile({
+        username,
+        user: profileForm,
+      }).unwrap();
       console.log("Updated user : ", userData);
       dispatch(authActions.login(userData?.user));
       localStorage.setItem("user", JSON.stringify(userData));
@@ -75,9 +88,23 @@ export default function Profile() {
       });
       setInputState(true);
       setButtonState("Edit");
+      dispatch(
+        notifyActions.openModel({
+          head: "Update Successfull",
+          message: userData?.message,
+          type: "error",
+        })
+      );
     } 
-    catch (error) {
-      console.log("Error editing profile ", error);
+    catch (err) {
+      console.log("Error editing profile ", err);
+      dispatch(
+        notifyActions.openModel({
+          head: "Update failed",
+          message: err?.data?.message || err?.message,
+          type: "error",
+        })
+      );
     }
   }
 
@@ -123,7 +150,11 @@ export default function Profile() {
             }}
           >
             {ButtonState}{" "}
-            {InputState ? <FiEdit className="mx-1" /> : <FaRegSave className="mx-1" />}
+            {InputState ? (
+              <FiEdit className="mx-1" />
+            ) : (
+              <FaRegSave className="mx-1" />
+            )}
           </button>
 
           <button
@@ -131,10 +162,42 @@ export default function Profile() {
             onClick={() => {
               dispatch(authActions.logout());
               localStorage.removeItem("user");
+              dispatch(notifyActions.openModel({
+                head : "Logged Out",
+                message : "User logged out successfully",
+                type : "success"
+              }))
             }}
           >
             Log Out
             <FiLogOut className="mx-1" />
+          </button>
+
+          <button
+            className="h-[40px] w-[100px] flex justify-center items-center text-white bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 hover:brightness-90 rounded-md p-2"
+            onClick={async () => {
+              try { 
+                const data = await removeAccount(profileForm.username);
+                dispatch(authActions.logout());
+                localStorage.removeItem("user");
+                dispatch(notifyActions.openModel({
+                  head : "Account removed",
+                  message : data?.message,
+                  type : "success"
+                }))
+              } 
+              catch (error) {
+                console.log(error);
+                dispatch(notifyActions.openModel({
+                  head : "Account removal failed",
+                  message : error?.data?.message || error?.message,
+                  type : "error"
+                }))
+              }
+            }}
+          >
+            Remove
+            <RiDeleteBin6Line className="mx-1" />
           </button>
         </div>
       </div>

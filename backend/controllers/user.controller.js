@@ -41,8 +41,6 @@ module.exports = {
 
   async editAccount(req, res) {
     const username = req.params.name;
-    console.log("editAccount username:", username);
-    console.log("updated user payload:", req.body);
 
     if (!req.body || Object.keys(req.body).length === 0) {
       return res.status(400).send({ message: "No update data provided" });

@@ -3,6 +3,7 @@ import { useAuthenticateMutation } from "../app/api/usersApiSlice";
 import { useDispatch } from "react-redux";
 import { authActions } from "../app/features/authSlice";
 import Notification from "../Components/Notification";
+import { notifyActions } from "../app/features/notificationSlice";
 
 export default function Authenticate() {
   const [authenticate, { isLoading, isError, error, data }] =
@@ -27,9 +28,20 @@ export default function Authenticate() {
       }).unwrap();
       // console.log("Authenticate : ", userData)
       dispatch(authActions.login(userData));
+      dispatch(notifyActions.openModel({
+          head : "Authentication successfull",
+          message : userData.message,
+          type : "success"
+      }))
       localStorage.setItem("user", JSON.stringify(userData));
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Auth error:", err);
+      dispatch(notifyActions.openModel({
+          head : "Authentication failed",
+          message : err?.data?.message || err?.message,
+          type : "error"
+      }))
     }
   }
   return (
@@ -37,13 +49,6 @@ export default function Authenticate() {
       <h1 className=" col-span-2 place-self-center font-bold text-[1.5rem]">
         Welcome to CineBitez
       </h1>
-      {isError && (
-        <Notification
-          head={"Authentication failed"}
-          message={error?.data?.message || error?.message}
-          type={"error"}
-        />
-      )}
       <div className="col-span-2 place-self-center flex gap-2 items-center bg-gray-800/50 rounded-lg p-1 mb-2">
         <input
           type="radio"

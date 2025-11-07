@@ -36,7 +36,7 @@ module.exports.addNewMovie = async function(req, res){
 module.exports.editMovie = async function(req, res) {
     try {
         const movieName = req.params.name;
-        const updatedMovie = await movie.findOneAndUpdate({ name: movieName }, req.body, {
+        const updatedMovie = await movie.findOneAndUpdate({ movie: movieName }, req.body, {
             new: true,
             runValidators: true
         });

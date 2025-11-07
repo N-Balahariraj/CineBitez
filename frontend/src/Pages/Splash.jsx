@@ -11,7 +11,7 @@ export default function Splash({ setSelectedMovie, filteredSpotlights }) {
   const navigate = useNavigate();
   const [Date, setDate] = useState("");
   const [Time, setTime] = useState("");
-  const [trailer, setTrailer] = useState(1);
+  const [id, setId] = useState(1);
   return (
     <section className="splash">
       <h2 className="discover-title">
@@ -20,7 +20,7 @@ export default function Splash({ setSelectedMovie, filteredSpotlights }) {
       <section className="discover">
         <div className="discover__player">
           <ReactPlayer
-            url={filteredSpotlights?.[trailer]?.trailers[0]}
+            url={filteredSpotlights?.find((spotlight) => spotlight.id === id)?.trailers[0]}
             controls={true}
             width="100%"
             height="100%"
@@ -86,7 +86,7 @@ export default function Splash({ setSelectedMovie, filteredSpotlights }) {
             <Spotlight
               key={spotlight.id}
               spotlight={spotlight}
-              setTrailer={setTrailer}
+              setId={setId}
               setSelectedMovie={setSelectedMovie}
             />
           );

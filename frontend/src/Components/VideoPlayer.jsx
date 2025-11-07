@@ -4,7 +4,7 @@ import { useGetMoviesQuery } from "../app/api/moviesApiSlice";
 
 export default function VideoPlayer({player, setSelectedMovie}) {
   const {data : {_, movies} = {}} = useGetMoviesQuery();
-  const movie = movies[player - 1];
+  const movie = movies.find((movie) => movie.id === player);
 
   return (
     <div className="movie-player">

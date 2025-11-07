@@ -21,8 +21,8 @@ export const moviesApiSlice = apiSlice.injectEndpoints({
 
     // 3. editMovie
     editMovie: builder.mutation({
-      query: ({ theatreName, ...movie }) => ({
-        url: `edit-movie/${theatreName}`,
+      query: ({ movieName, movie }) => ({
+        url: `edit-movie/${encodeURIComponent(movieName)}`,
         method: 'PUT',
         body: movie,
       }),
@@ -31,8 +31,8 @@ export const moviesApiSlice = apiSlice.injectEndpoints({
 
     // 4. removeMovie
     removeMovie: builder.mutation({
-      query: (name) => ({
-        url: `remove-movie/${name}`,
+      query: (movieName) => ({
+        url: `remove-movie/${encodeURIComponent(movieName)}`,
         method: 'DELETE', 
       }),
       invalidatesTags: ['Movie'],

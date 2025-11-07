@@ -11,6 +11,7 @@ import { useGetMoviesQuery } from "./app/api/moviesApiSlice.js";
 import { useGetTheatresQuery } from "./app/api/theatresApiSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "./app/features/authSlice.js";
+import Notification from "./Components/Notification.jsx";
 
 export default function App() {
   const {
@@ -28,9 +29,8 @@ export default function App() {
     movieData || {};
   const { message: theatreDataStatus = " ", theatres: Theatres_Data = [] } =
     theatreData || {};
-  const { message: userDataStatus = " ", user: User_Data = {} } = JSON.parse(
-    localStorage.getItem("user") 
-  )|| {};
+  const { message: userDataStatus = " ", user: User_Data = {} } =
+    JSON.parse(localStorage.getItem("user")) || {};
 
   const [currentScreen, setCurrentScreen] = useState("splash");
   const [filteredTheatres, setFilteredTheatres] = useState([]);
@@ -38,10 +38,11 @@ export default function App() {
   const [filteredSpotlights, setFilteredSpotlights] = useState([]);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const notify = useSelector((state) => state.notify);
+  // console.log(notify);
 
-  console.log("movieData : ",Movies_Data)
+  // console.log("movieData : ",Movies_Data)
   // console.log("theatreData : ",Theatres_Data)
-
 
   useEffect(() => {
     if (Movies_Data) {
@@ -59,6 +60,14 @@ export default function App() {
   return (
     <>
       <Router>
+        {(notify?.message || notify?.head) && (
+          <Notification
+            key={notify.head}
+            head={notify.head}
+            message={notify.message}
+            type={notify.type}
+          />
+        )}
         <HeaderNav
           currentScreen={currentScreen}
           setCurrentScreen={setCurrentScreen}

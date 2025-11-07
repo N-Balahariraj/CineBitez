@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { notifyActions } from "../app/features/notificationSlice";
 
 const COUNTDOWN = 5000;
 
 export default function Notification({ head, message, type }) {
+  const dispatch = useDispatch();
+
   const [remainingTime, setRemainingTime] = useState(COUNTDOWN);
   const dialogRef = useRef();
 
@@ -16,11 +20,21 @@ export default function Notification({ head, message, type }) {
     };
   }, []);
 
+  // reset timer when a new notification arrives
+  useEffect(() => {
+    setRemainingTime(COUNTDOWN);
+  }, [head, message, type]);
+
   function closeNotification() {
     dialogRef.current.close();
+    dispatch(notifyActions.closeModal());
   }
 
-  if (remainingTime <= 0) closeNotification();
+  useEffect(() => {
+    if (remainingTime <= 0) {
+      closeNotification();
+    }
+  }, [remainingTime]);
 
   return (
     <dialog className={`notification ${type}`} ref={dialogRef} open>

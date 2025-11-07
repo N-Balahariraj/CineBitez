@@ -51,11 +51,13 @@ const movieSchema = new mongoose.Schema({
         type: Number,
         default: 0,
         set: v => {
-            if(v.includes('K') || v.includes('k')) return parseFloat(v) * 1_000;
-            if( v.includes('M') || v.includes('m')) return parseFloat(v) * 1_000_000;
+            if(!v) return;
+            if(v?.includes('K') || v?.includes('k')) return parseFloat(v) * 1_000;
+            if( v?.includes('M') || v?.includes('m')) return parseFloat(v) * 1_000_000;
             return parseFloat(v);
         },
         get: v => {
+            if(!v) return;
             if(Math.floor(v / 1_000_000)) return (v/1_000_000).toFixed(2)+"M";
             if(Math.floor(v / 1_000)) return (v/1_000).toFixed(2)+"K";
             return v+""

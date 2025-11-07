@@ -11,7 +11,7 @@ const theatresApiSlice = apiSlice.injectEndpoints({
     //2. addNewTheatre
     addNewTheatre: builder.mutation({
       query: (theatre) => ({
-        url: "/new-theatre",
+        url: "/new-theatres",
         method: "POST",
         body: theatre,
       }),
@@ -20,8 +20,8 @@ const theatresApiSlice = apiSlice.injectEndpoints({
 
     //3. editTheatre
     editTheatre: builder.mutation({
-      query: ({ theatreName, ...theatre }) => ({
-        url: `/edit-theatre/${theatreName}`,
+      query: ({ theatreName, theatre }) => ({
+        url: `/edit-theatre/${encodeURIComponent(theatreName)}`,
         method: "PUT",
         body: theatre,
       }),
@@ -31,7 +31,7 @@ const theatresApiSlice = apiSlice.injectEndpoints({
     //4. removeTheatre
     removeTheatre: builder.mutation({
       query: (theatreName) => ({
-        url: `/remove-theatre/${theatreName}`,
+        url: `/remove-theatre/${encodeURIComponent(theatreName)}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Theatre"],
