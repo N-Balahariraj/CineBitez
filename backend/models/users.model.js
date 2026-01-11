@@ -2,6 +2,29 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 
+const notificationSchema = new mongoose.Schema(
+  {
+    head: {
+      type: String,
+      required: true,
+    },
+    message: String,
+    type: {
+      type: String,
+      enum: {
+        values: ["error", "warning", "success", "feedback"],
+        message: '"{VALUE}" is not a supported notification type',
+      },
+      default: "success"
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now()
+    }
+  },
+  { _id: false }
+);
+
 const userSchema = new mongoose.Schema(
   {
     // --- Core Identity Fields ---
@@ -31,7 +54,7 @@ const userSchema = new mongoose.Schema(
       minlength: [8, "Password must be at least 8 characters long."],
       match: [
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
-        "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character."
+        "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.",
       ],
     },
 
@@ -96,6 +119,20 @@ const userSchema = new mongoose.Schema(
     lastLogin: {
       type: Date,
     },
+
+    // --- Booking History ---
+    bookingHistory: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "bookings",
+      },
+    ],
+
+    // --- Notifications ---
+    notifications: {
+      type: [notificationSchema],
+      default: [],
+    },
   },
   {
     // --- Schema Options ---
@@ -119,8 +156,7 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
-  } 
-  catch (err) {
+  } catch (err) {
     throw err;
   }
 };

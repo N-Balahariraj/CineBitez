@@ -21,6 +21,15 @@ const movieSchema = new mongoose.Schema({
         maxlength: [100, 'Movie title cannot exceed 100 characters.'],
         unique: true 
     },
+    duration: {
+        type: Number,
+        required: [true, 'Movie duration is required.'],
+        min: [3600000, 'Movie duration must be at least 1 hour.'],
+        validate: {
+            validator: Number.isInteger,
+            message: 'Movie duration must be an integer (milliseconds).'
+        }
+    },
     languages: {
         type: [String],
         required: [true, 'At least one language is required.'],
@@ -87,11 +96,7 @@ const movieSchema = new mongoose.Schema({
             },
             message: 'All trailers must be valid YouTube URLs.'
         }
-    },
-    theatres: [{ 
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'theatres' 
-    }]
+    }
 }, {
     timestamps: true, 
     toJSON: { getters: true },

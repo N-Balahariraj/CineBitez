@@ -1,4 +1,5 @@
 const theatre = require("../models/theatres.model");
+const showSession = require("../models/showSessions.model");
 
 module.exports = {
   async fetchAllTheatres(req, res) {
@@ -14,30 +15,25 @@ module.exports = {
   async addNewTheatre(req, res) {
     try {
       if (Array.isArray(req.body) && req.body.length === 0) {
-        return res
-          .status(400)
-          .send({
-            message: "Request body must be a non-empty array of theatres.",
-          });
+        return res.status(400).send({
+          message: "Request body must be a non-empty array of theatres.",
+        });
       }
 
       let created;
       if (Array.isArray(req.body)) {
         created = await theatre.insertMany(req.body);
-        return res
-          .status(201)
-          .send({
-            message: `${created.length} theatres created`,
-            theatres: created,
-          });
+        return res.status(201).send({
+          message: `${created.length} theatres created`,
+          theatres: created,
+        });
       }
 
       created = await theatre.create(req.body);
       return res
         .status(201)
         .send({ message: "Theatre created", theatre: created });
-    } 
-    catch (error) {
+    } catch (error) {
       console.error(error);
       if (error.code === 11000) {
         return res
@@ -50,8 +46,8 @@ module.exports = {
 
   async editTheatre(req, res) {
     const { name } = req.params;
-    console.log("Name: ",name);
-    console.log("Theatre: ",req.body);
+    console.log("Name: ", name);
+    console.log("Theatre: ", req.body);
     if (!name)
       return res.status(400).send({ message: "Theatre name is required" });
 
@@ -92,6 +88,16 @@ module.exports = {
       if (!deleted) {
         return res.status(404).send({ message: "Theatre not found" });
       }
+
+      const sessionsResult = await showSession.deleteMany({
+        theatreId: deleted._id,
+      });
+
+      res.status(200).send({
+        message: "Theatre removed",
+        deleted,
+        deletedShowSessionsCount: sessionsResult.deletedCount,
+      });
 
       res.status(200).send({ message: "Theatre removed", deleted });
     } catch (error) {

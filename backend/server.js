@@ -29,3 +29,6 @@ app.listen(port,()=>{
 require('./routes/user.route.js')(app)
 require('./routes/movie.route.js')(app)
 require('./routes/theatre.route.js')(app)
+require('./routes/showSession.route.js')(app)
+require('./routes/booking.route.js')(app)
+require('./routes/siteContent.route.js')(app)

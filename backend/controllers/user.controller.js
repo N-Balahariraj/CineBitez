@@ -10,7 +10,7 @@ module.exports = {
       if (isMatch) {
         res
           .status(200)
-          .send({ message: "user logged in successfully", user: req.user });
+          .send({ message: "User logged in successfully", user: req.user });
       } 
       //prettier-ignore
       else {
@@ -27,14 +27,9 @@ module.exports = {
       } 
       catch (error) {
         console.error(error);
-        if (error.code === 11000) {
-          return res
-            .status(409)
-            .send({ message: "An user with this username/email already exists." });
-        }
         res
           .status(500)
-          .send({ message: "Error creating user", error});
+          .send({ message: error.message || "Error creating user"});
       }
     }
   },
@@ -64,6 +59,59 @@ module.exports = {
         return res.status(409).send({ message: "An user with this username/email already exists." });
       }
       return res.status(500).send({ message: "Error editing user", error });
+    }
+  },
+
+  async notify(req, res) {
+    const username = String(req.params.name || "").toLowerCase();
+
+    try {
+      const { notifications } = req.body || {};
+
+      if (!Array.isArray(notifications)) {
+        return res
+          .status(400)
+          .send({ message: "`notifications` must be an array" });
+      }
+
+      const account = await user.findOne({ username });
+      if (!account) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      if(notifications.length === 1 && notifications[0]?.type === "feedback"){
+        account.notifications = [...(account.notifications), ...notifications];
+        await account.save();
+      }
+      else{
+        account.notifications = notifications;
+        await account.save();
+      }
+      
+      return res.status(200).send({
+        message: "Notifications updated",
+        notifications: account.notifications,
+      });
+    } 
+    catch (e) {
+      console.log(e);
+      return res
+        .status(500)
+        .send({ message: `Unable to notify user: ${e?.message}` });
+    }
+  },
+
+  async getNotifications(req, res){
+    const username = req.params.name;
+    try{
+      const account = await user.findOne({username});
+      if(!account)
+        return res.status(404).send({message: "User not found"});
+      return res.status(200).send({message: "Notifications retrieved successfully",notifications: account.notifications})
+    }
+    catch(e){
+      console.log(e);
+      return res.status(500).send({message: e.message || "Unable to get the notifications"})
     }
   },
 

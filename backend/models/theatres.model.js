@@ -1,30 +1,42 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const showSchema = new mongoose.Schema({
-    movie: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'movies', 
-        required: true
+const hallSchema = new mongoose.Schema(
+  {
+    hallId: {
+      type: String,
+      required: [true, "Hall ID is required."],
+      trim: true,
     },
-    languages: {
-        type: [String],
-        required: [true, 'At least one language is required for a show.'],
-        lowercase: true,
-        trim: true
+    type: {
+      type: String,
+      trim: true,
+      default: "standard",
     },
-    showTimings: {
-        type: [String],
-        required: [true, 'At least one show time is required.'],
-        validate: {
-            validator: function(arr) {
-                // This regex checks for a "HH:MM AM/PM" format
-                return arr.every(time => /^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i.test(time));
-            },
-            message: 'All show times must be in a valid HH:MM AM/PM format.'
-        }
-    }
-}, { _id: false }); 
+    // Example: ["AAAA_AAAA", "BBBB_BBBB"] where "_" is aisle
+    layoutTemplate: {
+      type: [String],
+      required: [true, "layoutTemplate is required."],
+      validate: {
+        validator: function (arr) {
+          if (!Array.isArray(arr) || arr.length === 0) return false;
+          // Ensure all rows are strings and same length
+          const len = arr[0]?.length ?? 0;
+          if (len === 0) return false;
+          return arr.every(
+            (row) =>
+              typeof row === "string" &&
+              row.length === len &&
+              /^[A-Za-z_]+$/.test(row)
+          );
+        },
+        message:
+          "layoutTemplate must be a non-empty array of equal-length strings containing only letters and '_'",
+      },
+    },
+  },
+  { _id: false }
+);
 
 const theatreSchema = new mongoose.Schema({
     id: { 
@@ -67,6 +79,7 @@ const theatreSchema = new mongoose.Schema({
     },
     pics: { 
         type: [String],
+        default: [],
         validate: {
             validator: function(arr) {
                 return arr.every(url => validator.isURL(url));
@@ -74,7 +87,12 @@ const theatreSchema = new mongoose.Schema({
             message: 'All picture URLs must be valid.'
         }
     },
-    shows: [showSchema] 
+
+    // Blueprint: one theatre can have multiple halls
+    halls: {
+        type: [hallSchema],
+        default: [],
+    }
 }, {
     timestamps: true, 
     toJSON: { getters: true },

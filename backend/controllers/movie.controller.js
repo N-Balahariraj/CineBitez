@@ -22,7 +22,7 @@ module.exports.addNewMovie = async function(req, res){
             return res.status(201).send({ message: `${newMovies.length} movies created`, movies: newMovies });
         }
         newMovies = await movie.create(req.body);
-        return res.status(201).send({ message: "movie created", movies: newMovies });
+        return res.status(201).send({ message: "movie created", movie: newMovies });
 
     } catch (error) {
         console.log(error);
@@ -64,7 +64,7 @@ module.exports.removeMovie = async function(req, res) {
             return res.status(404).send({ message: `Movie with name '${movieName}' not found.` });
         }
 
-        res.status(200).send({ message: "Movie deleted successfully." });
+        res.status(200).send({ message: "Movie deleted successfully.", movie: deletedMovie });
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: "An internal server error occurred." });
