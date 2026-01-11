@@ -1,9 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialNotificationState = {
-  head: "",
-  message: "",
-  type: "",
+  notifications: [],
 };
 
 const notificationSlice = createSlice({
@@ -11,15 +9,22 @@ const notificationSlice = createSlice({
   initialState: initialNotificationState,
   reducers: {
     openModel(state, action) {
-      const { head = "", message = "", type = "" } = action.payload || {};
-      state.head = head;
-      state.message = message;
-      state.type = type;
+      state.notifications.push({
+        ...action.payload,
+        timestamp: Date.now(),
+      });
     },
-    closeModal(state) {
-      state.head = "";
-      state.message = "";
-      state.type = "";
+    setNotifications(state, action) {
+      // console.log("Setting the initialState of notifications...",action.payload);
+      state.notifications = action.payload || [];
+    },
+    removeNotification(state, action) {
+      state.notifications = state.notifications.filter(
+        (notification) => notification.timestamp !== action.payload?.timestamp
+      );
+    },
+    clearNotification(state) {
+      state.notifications = [];
     },
   },
 });

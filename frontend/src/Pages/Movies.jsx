@@ -1,111 +1,87 @@
+// Hooks
 import React, { useState, useEffect } from "react";
-import Movie from "../Components/Cards/Movie";
-import Shimmer from "../Components/Shimmer";
-import VideoPlayer from "../Components/VideoPlayer";
-import { useDispatch, useSelector } from "react-redux";
-import MovieForm from "../Components/Forms/MovieForm";
+import {
+  useActionData,
+  useLoaderData,
+  useNavigation,
+  useRouteLoaderData,
+} from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
+
+// React-Redux
+import { store } from "../app/store";
+import { selectionActions } from "../app/features/selectionsSlice";
 import { notifyActions } from "../app/features/notificationSlice";
-import { useAddNewMovieMutation, useEditMovieMutation, useRemoveMovieMutation } from "../app/api/moviesApiSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-function Movies({ setSelectedMovie, filteredMovies }) {
-  const role = useSelector((state) => state.auth.user?.role);
+// Components
+import MovieFilters from "../Components/Movies/MovieFilters";
+import MoviePreview from "../Components/Movies/MoviePreview";
+import MovieDetails from "../Components/Movies/MovieDetails";
+import Movie from "../Components/Movies/Movie";
+import MovieForm from "../Components/Movies/MovieForm";
+import Shimmer from "../Components/UI/Feedbacks/Shimmer";
+import TheatreDetails from "../Components/Theatres/TheatreDetails";
+
+export default function Movies() {
+  // react-router-dom
+  const role = useRouteLoaderData("root").role;
+  const { movies } = useRouteLoaderData('home');
+  const movie = useActionData();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
+
+  // react-redux
   const dispatch = useDispatch();
-  const [addNewMovie, addNewMovieResponse] = useAddNewMovieMutation();
-  const [editMovie, editMovieResponse] = useEditMovieMutation();
-  const [removeMovie, removeMovieResponse] = useRemoveMovieMutation();
+  const selectedMovie = useSelector((state) => state.selection.selectedMovie);
+  const selectedTheatre = useSelector(
+    (state) => state.selection.selectedTheatre
+  );
 
-  const [player, setPlayer] = useState(1);
+  const [filteredMovies, setFilteredMovies] = useState(movies || []);
   const [isMovieDialogOpen, setIsMovieDialogOpen] = useState(false);
   const [editingMovie, setEditingMovie] = useState(null);
 
+  const onClose = () => {
+    setIsMovieDialogOpen(false);
+    setEditingMovie(null);
+  };
+
   useEffect(() => {
-    if (typeof setSelectedMovie === "function") {
-      setSelectedMovie(player);
-    }
-  }, [player, setSelectedMovie]);
+    setFilteredMovies(movies || []);
+    if (movies?.length)
+      dispatch(selectionActions.setSelectedMovie(movies?.[0]));
+  }, [movies, dispatch]);
 
-  async function handleFormSubmit(payload) {
-    try {
-      if (editingMovie) {
-        const res = await editMovie({
-          movieName: editingMovie.movie,
-          movie: payload,
-        }).unwrap();
-        dispatch(
-          notifyActions.openModel({
-            head: "Updated",
-            message: res?.message || "Movie updated",
-            type: "success",
-          })
-        );
-      } 
-      else {
-        const res = await addNewMovie(payload).unwrap();
-        dispatch(
-          notifyActions.openModel({
-            head: "Added",
-            message: res?.message || "Movie added",
-            type: "success",
-          })
-        );
-      }
-    } 
-    catch (err) {
-      console.error("Movie save failed:", err);
-      const msg =
-        err?.data?.message || err?.error || err?.message || "Request failed";
-      dispatch(
-        notifyActions.openModel({ head: "Failed", message: msg, type: "error" })
-      );
-    } 
-    finally {
-      setIsMovieDialogOpen(false);
-      setEditingMovie(null);
+  useEffect(() => {
+    if (!isSubmitting && movie) {
+      onClose();
+      // revalidate();
     }
-  }
+  }, [isSubmitting, movie]);
 
-  async function handleDelete(e, movie) {
-    e.stopPropagation();
-     if (!window.confirm(`Delete movie "${movie.movie}"?`)) return;
-    try {
-        const res = await removeMovie(movie.movie).unwrap();
-        setPlayer(1);
-        dispatch(
-          notifyActions.openModel({
-            head: "Deleted",
-            message: res?.message || "Movie removed",
-            type: "success",
-          })
-        );
-    } 
-    catch (err) {
-      console.error("Delete failed:", err);
-      const msg =
-        err?.data?.message || err?.error || err?.message || "Request failed";
-      dispatch(
-        notifyActions.openModel({ head: "Failed", message: msg, type: "error" })
-      );
-    }
-  }
+  const isTablet = useMediaQuery({
+    query: "(min-width: 40rem) and (max-width: 63.9rem)",
+  });
 
   return (
     <>
-      <div className="movies">
-        <VideoPlayer player={player} setSelectedMovie={setSelectedMovie} />
-        <div className="flex flex-wrap justify-center gap-2">
+      <section className="movies scrollbar-hide">
+        <MovieFilters movies={movies} setFilteredMovies={setFilteredMovies}/>
+        <MoviePreview selectedMovie={selectedMovie} className={"player"} />
+        <MovieDetails selectedMovie={selectedMovie} />
+        {!isTablet && <TheatreDetails selectedTheatre={selectedTheatre} />}
+        <div className="movie">
           {filteredMovies?.map((movie) => {
             return (
               <Movie
                 key={movie.id}
-                id={movie.id}
-                MovieDetails={movie}
-                setPlayer={setPlayer}
+                movie={movie}
                 onEdit={(e) => {
                   e.stopPropagation();
                   setEditingMovie(movie);
                   setIsMovieDialogOpen(true);
                 }}
-                onDelete={(e) => handleDelete(e, movie)}
               />
             );
           }) ?? <Shimmer />}
@@ -125,17 +101,125 @@ function Movies({ setSelectedMovie, filteredMovies }) {
             <MovieForm
               isOpen={isMovieDialogOpen}
               initialData={editingMovie}
-              onClose={() => {
-                setIsMovieDialogOpen(false);
-                setEditingMovie(null);
-              }}
-              onSubmit={handleFormSubmit}
+              onClose={onClose}
             />
           </>
         )}
-      </div>
+      </section>
     </>
   );
 }
 
-export default Movies;
+export async function loader() {
+  
+}
+
+export async function action({ request, params }) {
+  try {
+    const fd = await request.formData();
+
+    const intent = fd.get("intent");
+
+    const payload = {
+      id: fd.get("id") ? Number(fd.get("id")) : undefined,
+      imageUrl: String(fd.get("imageUrl") || "").trim(),
+      movie: String(fd.get("movie") || "").trim(),
+      languages: String(fd.get("languages") || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      genres: String(fd.get("genres") || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      rating: fd.get("rating") ? Number(fd.get("rating")) : undefined,
+      votes: fd.get("votes") ? String(fd.get("votes")).trim() : undefined,
+      price: fd.get("price") ? Number(fd.get("price")) : undefined,
+      duration: fd.get("duration") ? Math.round(Number(fd.get("duration")) * 3600000) : undefined,
+      pics: fd
+        .getAll("pics")
+        .map((v) => String(v || "").trim())
+        .filter(Boolean),
+      trailers: String(fd.get("trailers") || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    };
+
+    console.log(payload);
+
+    const movieName = fd.get("movieName");
+
+    const OPTIONS_BY_INTENT = {
+      create: {
+        url: "http://localhost:5000/api/new-movies",
+        method: "POST",
+        body: payload,
+      },
+      update: {
+        url: `http://localhost:5000/api/edit-movie/${encodeURIComponent(
+          movieName || ""
+        )}`,
+        method: "PUT",
+        body: payload,
+      },
+      delete: {
+        url: `http://localhost:5000/api/remove-movie/${encodeURIComponent(
+          movieName
+        )}`,
+        method: "DELETE",
+      },
+    };
+
+    const options = OPTIONS_BY_INTENT[intent];
+    if (!options) throw new Response("Invalid intent", { status: 400 });
+
+    const res = await fetch(options.url, {
+      method: options.method,
+      headers: { "Content-Type": "application/json" },
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
+
+    if (!res.ok) {
+      store.dispatch(
+        notifyActions.openModel({
+          head: "Error !",
+          message: `Could not perform ${intent} on movies`,
+          type: "error",
+        })
+      );
+      return new Response(
+        JSON.stringify({ message: `Could not perform ${intent} on movies` }),
+        {
+          status: 500,
+        }
+      );
+    }
+
+    const { message, movie } = await res.json();
+
+    store.dispatch(
+      notifyActions.openModel({
+        head: `${intent}ed movie`,
+        message: message ?? `${intent}ed movie successfully`,
+        type: "success",
+      })
+    );
+
+    return movie;
+  } catch (error) {
+    store.dispatch(
+      notifyActions.openModel({
+        head: "Error ",
+        message: error.message ?? "Failed to update movie!",
+        type: "error",
+      })
+    );
+    return new Response(
+      JSON.stringify({
+        message: error.message || "Failed to update movie!",
+      }),
+      { status: error.status || 500 }
+    );
+  }
+}

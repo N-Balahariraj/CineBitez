@@ -1,0 +1,72 @@
+[
+  {
+    "_id": { "$oid": "665000000000000000000001" },
+    "id": 101,
+    "imageUrl": "https://example.com/posters/interstellar.jpg",
+    "movie": "Interstellar",
+    "languages": ["english"],
+    "genres": ["Sci-Fi", "Adventure"],
+    "rating": 8.7,
+    "votes": 1200000,
+    "price": 250,
+    "pics": ["https://example.com/movies/interstellar/1.jpg"],
+    "trailers": ["https://www.youtube.com/watch?v=zSWdZVtXT7E"],
+    "theatres": []
+  },
+  {
+    "_id": { "$oid": "665000000000000000000002" },
+    "id": 102,
+    "imageUrl": "https://example.com/posters/inception.jpg",
+    "movie": "Inception",
+    "languages": ["english", "hindi"],
+    "genres": ["Action", "Sci-Fi", "Thriller"],
+    "rating": 8.8,
+    "votes": 2100000,
+    "price": 240,
+    "pics": ["https://example.com/movies/inception/1.jpg"],
+    "trailers": ["https://www.youtube.com/watch?v=YoHD9XEInc0"],
+    "theatres": []
+  },
+  {
+    "_id": { "$oid": "665000000000000000000003" },
+    "id": 103,
+    "imageUrl": "https://example.com/posters/rrr.jpg",
+    "movie": "RRR",
+    "languages": ["tamil", "telugu", "hindi", "english"],
+    "genres": ["Action", "Drama"],
+    "rating": 8.2,
+    "votes": 450000,
+    "price": 230,
+    "pics": ["https://example.com/movies/rrr/1.jpg"],
+    "trailers": ["https://www.youtube.com/watch?v=NgBoMJy386M"],
+    "theatres": []
+  },
+  {
+    "_id": { "$oid": "665000000000000000000004" },
+    "id": 104,
+    "imageUrl": "https://example.com/posters/spiderman.jpg",
+    "movie": "Spider-Man: Into the Spider-Verse",
+    "languages": ["english", "hindi"],
+    "genres": ["Animation", "Action", "Adventure"],
+    "rating": 8.4,
+    "votes": 700000,
+    "price": 220,
+    "pics": ["https://example.com/movies/spiderverse/1.jpg"],
+    "trailers": ["https://www.youtube.com/watch?v=tg52up16eq0"],
+    "theatres": []
+  },
+  {
+    "_id": { "$oid": "665000000000000000000005" },
+    "id": 105,
+    "imageUrl": "https://example.com/posters/dune2.jpg",
+    "movie": "Dune: Part Two",
+    "languages": ["english"],
+    "genres": ["Sci-Fi", "Adventure", "Drama"],
+    "rating": 8.6,
+    "votes": 980000,
+    "price": 260,
+    "pics": ["https://example.com/movies/dune2/1.jpg"],
+    "trailers": ["https://www.youtube.com/watch?v=Way9Dexny3w"],
+    "theatres": []
+  }
+]
