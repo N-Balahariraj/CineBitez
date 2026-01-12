@@ -20,7 +20,8 @@ export default function Theatre({ theatre, onEditBtnClick }) {
       }}
     >
       {role === "admin" && (
-        <Forms className="theatre-cards__edit-icons">
+        <Forms method="post" className="theatre-cards__edit-icons">
+          <Forms.Input type="hidden" name="theatreName" value={theatre.name}/>
           <Forms.Button
             className="theatre-cards__edit-icon"
             onClick={onEditBtnClick}

@@ -32,7 +32,10 @@ export default function Theatres() {
     dispatch(selectionActions.setSelectedTheatre(theatres?.[0]));
   }, []);
 
-  useEffect(() => {}, [createdTheatre,sessions]);
+  useEffect(() => {
+    setFilteredTheatres(theatres);
+    selectionActions.setSelectedTheatre(null);
+  }, [createdTheatre,sessions,theatres,showSessions]);
 
   const [wizardKey, setWizardKey] = useState(0);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
@@ -304,10 +307,6 @@ function safeSessionsForTheatre(showSessions, theatreId) {
   return list.filter((s) => String(s?.theatreId) === String(theatreId));
 }
 
-export async function loader() {
-  
-}
-
 export async function action({ request }) {
   try {
     const fd = await request.formData();
@@ -474,6 +473,8 @@ export async function action({ request }) {
       headers: { "Content-Type": "application/json" },
       body: options.body ? JSON.stringify(options.body) : undefined,
     });
+
+    console.log(res);
 
     if (!res.ok) {
       store.dispatch(
