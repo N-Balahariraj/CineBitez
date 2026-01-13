@@ -22,6 +22,7 @@ import Movie from "../Components/Movies/Movie";
 import MovieForm from "../Components/Movies/MovieForm";
 import Shimmer from "../Components/UI/Feedbacks/Shimmer";
 import TheatreDetails from "../Components/Theatres/TheatreDetails";
+import convertTobase64 from "../utils/base64";
 
 export default function Movies() {
   // react-router-dom
@@ -75,7 +76,7 @@ export default function Movies() {
           {filteredMovies?.map((movie) => {
             return (
               <Movie
-                key={movie.id}
+                key={movie._id}
                 movie={movie}
                 onEdit={(e) => {
                   e.stopPropagation();
@@ -120,9 +121,13 @@ export async function action({ request, params }) {
 
     const intent = fd.get("intent");
 
+    // console.log(fd.get("posterUrl")?.size)
+
+    const posterUrl = await convertTobase64(fd.get("posterUrl"));
+    // console.log(posterUrl)
+
     const payload = {
-      id: fd.get("id") ? Number(fd.get("id")) : undefined,
-      imageUrl: String(fd.get("imageUrl") || "").trim(),
+      imageUrl: posterUrl,
       movie: String(fd.get("movie") || "").trim(),
       languages: String(fd.get("languages") || "")
         .split(",")
@@ -136,17 +141,13 @@ export async function action({ request, params }) {
       votes: fd.get("votes") ? String(fd.get("votes")).trim() : undefined,
       price: fd.get("price") ? Number(fd.get("price")) : undefined,
       duration: fd.get("duration") ? Math.round(Number(fd.get("duration")) * 3600000) : undefined,
-      pics: fd
-        .getAll("pics")
-        .map((v) => String(v || "").trim())
-        .filter(Boolean),
       trailers: String(fd.get("trailers") || "")
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean),
     };
 
-    console.log(payload);
+    // console.log(payload);
 
     const movieName = fd.get("movieName");
 

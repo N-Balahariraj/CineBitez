@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Forms from "../UI/Forms/Forms";
+import { MdFileUpload } from "react-icons/md";
 
 /**
  * MovieForm - uncontrolled form read by FormData on submit.
@@ -17,6 +18,7 @@ import Forms from "../UI/Forms/Forms";
  */
 export default function MovieForm({ isOpen, onClose, initialData = null }) {
   const dialogRef = useRef(null);
+  const [posterPreviewUrl, setPosterPreviewUrl] = useState(null);
 
   useEffect(() => {
     if (!dialogRef.current) return;
@@ -33,9 +35,16 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    setPosterPreviewUrl(initialData?.imageUrl);
+  }, [initialData]);
+
+  useEffect(() => {
+    if (!posterPreviewUrl) return;
+    return () => URL.revokeObjectURL(posterPreviewUrl);
+  }, [posterPreviewUrl]);
+
   const defaults = {
-    id: initialData?.id ?? "",
-    imageUrl: initialData?.imageUrl ?? "",
     movie: initialData?.movie ?? "",
     languages: Array.isArray(initialData?.languages)
       ? initialData.languages.join(", ")
@@ -46,7 +55,9 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
     rating: initialData?.rating ?? "",
     votes: initialData?.votes ?? "",
     price: initialData?.price ?? "",
-    duration: initialData?.duration ? (initialData.duration/(1000*60*60)).toFixed(2) : "",
+    duration: initialData?.duration
+      ? (initialData.duration / (1000 * 60 * 60)).toFixed(2)
+      : "",
     pics: initialData?.pics?.[0] ?? "",
     trailers: Array.isArray(initialData?.trailers)
       ? initialData.trailers.join(", ")
@@ -65,6 +76,7 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
         key={initialData?.id ?? "new"}
         method={"post"}
         className="add-theatre-form"
+        encType="multipart/form-data"
       >
         <Forms.Fieldset
           legend={initialData ? "Edit Movie" : "Add New Movie"}
@@ -77,13 +89,13 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
             value={initialData?.movie ?? ""}
           />
 
-          <Forms.Input
+          {/* <Forms.Input
             label={"ID*"}
             name="id"
             type="number"
             required
             defaultValue={defaults.id}
-          />
+          /> */}
 
           <Forms.Input
             label={"Title*"}
@@ -94,7 +106,52 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
           />
 
           <Forms.Input
-            label={"Duration (In hours)*"} 
+            label={"Poster*"}
+            labelClassName="gap-2"
+          >
+            <div className="flex gap-5">
+              <div className="h-[50px] w-[50px] border-[1px] rounded-full cursor-pointer bg-slate-800 hover:bg-[image:var(--alpha-linear-gradient)]">
+                <MdFileUpload className="h-[100%] mx-auto text-xl " />
+                <Forms.Input
+                  id="posterUrl"
+                  name="posterUrl"
+                  type="file"
+                  accept=".jpeg, .jpg, .png"
+                  required={!initialData}
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) {
+                      return;
+                    }
+                    setPosterPreviewUrl(URL.createObjectURL(file));
+                  }}
+                />
+              </div>
+              {posterPreviewUrl && (
+                <div className="h-[50px] w-[100px] flex border-2 rounded-md overflow-hidden">
+                  <img
+                    src={posterPreviewUrl || ""}
+                    alt=""
+                    className="w-[70%]"
+                  />
+                  <button
+                    type="button"
+                    className="w-[30%] bg-slate-800 font-bold"
+                    onClick={(e) => {
+                      setPosterPreviewUrl(null);
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
+              )}
+            </div>
+            <small>allowed types are *.png, *.jpg and *.jpeg</small>
+          </Forms.Input>
+
+          <Forms.Input
+            label={"Duration (In hours)*"}
             name="duration"
             type="number"
             step="0.01"
@@ -144,17 +201,10 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
             required
             defaultValue={defaults.price}
           />
-                    
-          <Forms.Input
-            label={"Poster URL*"}
-            labelClassName="full"
-            name="imageUrl"
-            type="url"
-            required
-            defaultValue={defaults.imageUrl}
-          />
 
-          <Forms.Input
+          
+
+          {/* <Forms.Input
             label={"Pictures (one URL input shown; add more by app changes)"}
             labelClassName="full"
           >
@@ -168,7 +218,7 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
               If you have multiple pictures, supply them as separate inputs
               (advanced).
             </small>
-          </Forms.Input>
+          </Forms.Input> */}
 
           <Forms.Input
             label="Trailers (comma separated URLs)"
@@ -197,7 +247,7 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
             name="intent"
             value={initialData ? "update" : "create"}
             className="btn-primary"
-          // onClick={onClose}
+            // onClick={onClose}
           >
             Save
           </Forms.Button>

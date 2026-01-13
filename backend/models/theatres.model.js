@@ -42,7 +42,6 @@ const theatreSchema = new mongoose.Schema({
     id: { 
         type: Number,
         unique: true,
-        required: [true, 'Theatre ID is required.'],
     },
     name: {
         type: String,
@@ -74,18 +73,10 @@ const theatreSchema = new mongoose.Schema({
     bg: { 
         type: String,
         required: [true, 'Background image URL is required.'],
-        trim: true,
-        validate: [validator.isURL, 'Please provide a valid URL for the background image.']
     },
     pics: { 
         type: [String],
         default: [],
-        validate: {
-            validator: function(arr) {
-                return arr.every(url => validator.isURL(url));
-            },
-            message: 'All picture URLs must be valid.'
-        }
     },
 
     // Blueprint: one theatre can have multiple halls

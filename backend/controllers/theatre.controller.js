@@ -46,8 +46,8 @@ module.exports = {
 
   async editTheatre(req, res) {
     const { name } = req.params;
-    console.log("Name: ", name);
-    console.log("Theatre: ", req.body);
+    // console.log("Name: ", name);
+    // console.log("Theatre: ", req.body);
     if (!name)
       return res.status(400).send({ message: "Theatre name is required" });
 

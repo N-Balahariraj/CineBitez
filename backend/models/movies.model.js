@@ -5,14 +5,10 @@ const movieSchema = new mongoose.Schema({
     id: { 
         type: Number, 
         unique: true,
-        required: [true, 'Movie ID is required.'],
-        trim: true
     },
     imageUrl: {
         type: String,
         required: [true, 'Movie poster URL is required.'],
-        trim: true,
-        validate: [validator.isURL, 'Please provide a valid URL for the image.']
     },
     movie: {
         type: String,
@@ -81,12 +77,7 @@ const movieSchema = new mongoose.Schema({
     },
     pics: { 
         type: [String],
-        validate: {
-            validator: function(arr) {
-                return arr.every(url => validator.isURL(url));
-            },
-            message: 'All additional pictures must be valid URLs.'
-        }
+        default: []
     },
     trailers: {
         type: [String], 

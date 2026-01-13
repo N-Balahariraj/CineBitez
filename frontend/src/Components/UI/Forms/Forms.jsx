@@ -39,7 +39,7 @@ const Input = forwardRef(function Input(
 ) {
   if (children) {
     return (
-      <label className={labelClassName}>
+      <label className={labelClassName} {...props}>
         {label}
         {children}
       </label>

@@ -18,6 +18,7 @@ import TheatreSessionsForm from "../Components/Theatres/TheatreSessionsForm";
 import MovieDetails from "../Components/Movies/MovieDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { selectionActions } from "../app/features/selectionsSlice";
+import convertTobase64 from "../utils/base64";
 
 export default function Theatres() {
   const role = useRouteLoaderData("root").role;
@@ -205,6 +206,7 @@ export default function Theatres() {
             ref={wizardFormRef}
             className="add-theatre-form"
             method="post"
+            encType="multipart/form-data"
           >
             {/* Note: keep all steps mounted; components should hide themselves based on activeStep */}
             <TheatreForm
@@ -427,20 +429,22 @@ export async function action({ request }) {
     const theatreName = fd.get("theatreName");
 
     // Helpers for Theatre Payload
-    const pics = String(fd.get("pics") || "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    // const pics = String(fd.get("pics") || "")
+    //   .split(",")
+    //   .map((s) => s.trim())
+    //   .filter(Boolean);
+
+    const bg = await convertTobase64(fd.get("bgUrl"))
+
+    // console.log(bg);
 
     // Theatre Payload
     const theatrePayload = {
-      id: fd.get("id"),
       name: fd.get("name"),
       rating: fd.get("rating"),
       price: fd.get("price"),
       location: fd.get("location"),
-      bg: fd.get("bg"),
-      pics,
+      bg,
       halls: JSON.parse(fd.get("halls")),
     };
 
@@ -474,7 +478,7 @@ export async function action({ request }) {
       body: options.body ? JSON.stringify(options.body) : undefined,
     });
 
-    console.log(res);
+    // console.log(res);
 
     if (!res.ok) {
       store.dispatch(

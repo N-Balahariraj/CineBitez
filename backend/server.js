@@ -12,6 +12,7 @@ const app = express()
 
 // Middlewares
 dotenv.config()
+app.use(express.json({ limit: '10mb' }))
 app.use(bodyParser.json())
 app.use(cors({credentials : true}))
 app.use(cookieParser())

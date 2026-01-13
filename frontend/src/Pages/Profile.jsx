@@ -1,5 +1,5 @@
 // React hooks
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   redirect,
   useNavigate,
@@ -24,6 +24,9 @@ import { store } from "../app/store";
 import { notifyActions } from "../app/features/notificationSlice";
 import { useSelector } from "react-redux";
 
+// utils
+import convertTobase64 from "../utils/base64";
+
 export default function Profile() {
   const user = useRouteLoaderData("profile");
   const submit = useSubmit();
@@ -33,6 +36,13 @@ export default function Profile() {
 
   const isSaving = navigation.state === "submitting";
   const [isEditing, setIsEditing] = useState(false);
+
+  const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(null);
+  useEffect(() => {
+    return () => {
+      if (avatarPreviewUrl) URL.revokeObjectURL(avatarPreviewUrl);
+    };
+  }, [avatarPreviewUrl]);
 
   async function logout(event) {
     event.preventDefault();
@@ -47,12 +57,11 @@ export default function Profile() {
           body: JSON.stringify({ notifications }),
         }
       );
-      if(!res.ok){
-        console.log(res)
-        throw new Error("Unable to logout user")
+      if (!res.ok) {
+        console.log(res);
+        throw new Error("Unable to logout user");
       }
-    } 
-    catch (e) {
+    } catch (e) {
       console.log("error setting notification : ", e);
       store.dispatch(
         notifyActions.openModel({
@@ -71,24 +80,44 @@ export default function Profile() {
         type: "success",
       })
     );
-    store.dispatch(
-      notifyActions.clearNotification()
-    );
+    store.dispatch(notifyActions.clearNotification());
     navigate("/auth", { replace: true });
   }
 
   return (
-    <Forms method={"post"} className="profile scrollbar-hide">
+    <Forms
+      method={"post"}
+      encType="multipart/form-data"
+      className="profile scrollbar-hide"
+    >
       <Forms.Fieldset className="profile__photo">
         <div className="h-[40%] w-[50%] bg-[#354069] m-3 rounded-full hover:opacity-80 cursor-pointer overflow-hidden self-center">
           <img
-            src={`/Images/ProfileIcon.jpg`}
-            alt="default avatar"
+            src={avatarPreviewUrl || user?.avatar || `/Images/ProfileIcon.jpg`}
+            alt="avatar"
             className="h-[100%] w-[100%] p-2"
           />
-          <div className="w-[100%] h-[100%] flex justify-center items-center z-10 text-white relative bottom-[100%] opacity-5 hover:opacity-100 rounded-full">
-            <MdOutlinePhotoCamera className="text-4xl " />
-          </div>
+
+          <Forms.Input
+            label
+            labelClassName="w-[100%] h-[100%] flex justify-center items-center z-10 text-white relative bottom-[100%] opacity-5 hover:opacity-100 rounded-full"
+            Element={MdOutlinePhotoCamera}
+            elementClassName={`text-4xl ${isEditing?"":"hidden"}`}
+            name="avatar"
+            type="file"
+            accept=".jpeg, .jpg, .png"
+            className="hidden"
+            disabled={!isEditing}
+            multiple={false}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (!file) {
+                setAvatarPreviewUrl((prev) => prev? prev : user?.avatar);
+                return;
+              }
+              setAvatarPreviewUrl(URL.createObjectURL(file));
+            }}
+          />
         </div>
 
         <textarea
@@ -242,11 +271,15 @@ export async function action({ request, params }) {
     // console.log("Updating user");
     const fd = await request.formData();
 
+    const avatar = await convertTobase64(fd.get("avatar"));
+    // console.log(avatar)
+
     const profile = {
       username: fd.get("username"),
       email: fd.get("email"),
       phone: fd.get("phone"),
       address: fd.get("address"),
+      avatar,
       bio: fd.get("bio"),
       socials: {
         instagram: fd.get("socials.instagram"),
