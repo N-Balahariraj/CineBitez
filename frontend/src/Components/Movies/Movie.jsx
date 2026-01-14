@@ -3,13 +3,14 @@ import { RiMovieLine } from "react-icons/ri";
 import { IoStarSharp } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineModeEdit } from "react-icons/md";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { useRouteLoaderData } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { selectionActions } from "../../app/features/selectionsSlice";
 import Forms from "../UI/Forms/Forms";
 
 export default function Movie(props) {
-  const role = useRouteLoaderData("root").role;
+  const user = useRouteLoaderData("root");
+  const role = user?.role || "user";
   const { movie, rating, imageUrl, genres, votes } = props.movie;
   const dispatch = useDispatch();
   return (

@@ -8,7 +8,7 @@ export default function Contact() {
   const user = useRouteLoaderData("root");
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
-  const isAdmin = user.role === "admin";
+  const isAdmin = user?.role === "admin";
   const contactFormRef = useRef(null)
   const [searchParams] = useSearchParams();
   const senderName = searchParams.get("name") || "";
@@ -67,6 +67,7 @@ export default function Contact() {
 }
 
 export async function action({ request, params }) {
+  let apiUrl = process.env.REACT_APP_API_URL;
   try {
     const fd = await request.formData();
     const intent = fd.get("intent");
@@ -75,9 +76,8 @@ export async function action({ request, params }) {
       throw new Error("Feedback cannot be empty field");
     }
     let payload;
-    let url = `http://localhost:5000/api/notify/`;
     if (intent === "reply") {
-      url += fd.get("name");
+      apiUrl += `/${fd.get("name")}`;
       payload = {
         head: "Reply",
         message: `Message from admin : ${feedback}`,
@@ -85,14 +85,14 @@ export async function action({ request, params }) {
       };
     } 
     else {
-      url += `balahariraj`;
+      apiUrl += `/balahariraj`;
       payload = {
         head: "Feedback",
         message: `${fd.get("name")} : ${fd.get("email" )} \n ${fd.get("feedback")}`,
         type: "feedback",
       };
     }
-    const res = await fetch(url, {
+    const res = await fetch(apiUrl, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

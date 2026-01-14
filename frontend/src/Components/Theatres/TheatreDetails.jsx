@@ -1,12 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useRouteLoaderData, useLocation } from "react-router-dom";
+import { useRouteLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { notifyActions } from "../../app/features/notificationSlice";
 import { selectionActions } from "../../app/features/selectionsSlice";
 
 export default function TheatreDetails() {
-  const userId = useRouteLoaderData("root")._id;
+  const userId = useRouteLoaderData("root")?._id;
   const location = useLocation();
+  const navigate = useNavigate();
   const selectedTheatre = useSelector(
     (state) => state.selection.selectedTheatre
   );
@@ -35,6 +36,20 @@ export default function TheatreDetails() {
 
   async function confirmBooking(event) {
     event.preventDefault();
+    const apiUrl = process.env.REACT_APP_API_URL;
+
+    if(!userId){
+      dispatch(
+        notifyActions.openModel({
+          head: "Forbidden !",
+          message: "Login or SignUp to book your tickets",
+          type: "error",
+        })
+      );
+      navigate('/auth');
+      return;
+    }
+
     try {
       const payload = {
         userId,
@@ -42,7 +57,7 @@ export default function TheatreDetails() {
         seats,
         totalAmount,
       };
-      const res = await fetch("http://localhost:5000/api/new-booking",{
+      const res = await fetch(`${apiUrl}/new-booking`,{
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -63,6 +78,7 @@ export default function TheatreDetails() {
           type: "success",
         })
       );
+      return newBooking;
     } 
     catch (e) {
       console.log(e);

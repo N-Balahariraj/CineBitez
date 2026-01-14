@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 import { IoIosPricetags } from "react-icons/io";
 import { FaStarHalfAlt } from "react-icons/fa";
-import { useGetTheatresQuery } from "../../app/api/theatresApiSlice";
 import Filters from "../UI/Filters/Filters";
 
 export default function TheatreFilters({ theatres, setFilteredTheatres }) {

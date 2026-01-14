@@ -69,7 +69,6 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
       className="add-theatre-dialog"
       ref={dialogRef}
       open={!!isOpen}
-      role="dialog"
       aria-modal="true"
     >
       <Forms

@@ -21,7 +21,8 @@ import { selectionActions } from "../app/features/selectionsSlice";
 import convertTobase64 from "../utils/base64";
 
 export default function Theatres() {
-  const role = useRouteLoaderData("root").role;
+  const user = useRouteLoaderData("root");
+  const role = user?.role;
   const { theatres, showSessions } = useRouteLoaderData("home");
   const { theatre: createdTheatre, showSessions: sessions } = useActionData() || {};
   const navigation = useNavigation();
@@ -31,7 +32,7 @@ export default function Theatres() {
 
   useEffect(() => {
     dispatch(selectionActions.setSelectedTheatre(theatres?.[0]));
-  }, []);
+  }, [dispatch, theatres]);
 
   useEffect(() => {
     setFilteredTheatres(theatres);
@@ -310,6 +311,7 @@ function safeSessionsForTheatre(showSessions, theatreId) {
 }
 
 export async function action({ request }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
   try {
     const fd = await request.formData();
     let intent = fd.get("intent");
@@ -382,7 +384,7 @@ export async function action({ request }) {
 
       if (toDelete.length) {
         const res = await fetch(
-          "http://localhost:5000/api/flush-showSessions",
+          `${apiUrl}/flush-showSessions`,
           {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
@@ -393,7 +395,7 @@ export async function action({ request }) {
       }
 
       if (toCreate.length) {
-        const res = await fetch("http://localhost:5000/api/new-showSessions", {
+        const res = await fetch(`${apiUrl}/new-showSessions`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(toCreate), // backend supports array insertMany
@@ -450,19 +452,19 @@ export async function action({ request }) {
 
     const OPTIONS_BY_INTENT = {
       "create-theatre": {
-        url: "http://localhost:5000/api/new-theatres",
+        url: `${apiUrl}/new-theatres`,
         method: "POST",
         body: theatrePayload,
       },
       "edit-theatre": {
-        url: `http://localhost:5000/api/edit-theatre/${encodeURIComponent(
+        url: `${apiUrl}/edit-theatre/${encodeURIComponent(
           theatreName || ""
         )}`,
         method: "PUT",
         body: theatrePayload,
       },
       "delete-theatre": {
-        url: `http://localhost:5000/api/remove-theatre/${encodeURIComponent(
+        url: `${apiUrl}/remove-theatre/${encodeURIComponent(
           theatreName
         )}`,
         method: "DELETE",
@@ -513,69 +515,4 @@ export async function action({ request }) {
   } catch (error) {
     console.log(error);
   }
-  // async function handleRemoveTheatre(name) {
-  //   try {
-  //     const res = await removeTheatre(name).unwrap();
-  //     if (res.error) {
-  //       throw new Error(res.error.error);
-  //     }
-  //     dispatch(
-  //       notifyActions.openModel({
-  //         head: "Theatre removed",
-  //         message: `${
-  //           res?.message || "Theatre removed successfully"
-  //         }. Refresh to view the change`,
-  //         type: "success",
-  //       })
-  //     );
-  //   } catch (error) {
-  //     console.log("Error removing theatre : ", error);
-  //     dispatch(
-  //       notifyActions.openModel({
-  //         head: "Operation failed",
-  //         message: error?.data?.message || error?.message,
-  //         type: "error",
-  //       })
-  //     );
-  //   }
-  // }
-  // async function handleFormSubmit(payload) {
-  //   console.log(
-  //     "Theatre form submit payload:",
-  //     payload,
-  //     "editing:",
-  //     !!editingTheatre
-  //   );
-  //   try {
-  //     let res;
-  //     if (editingTheatre) {
-  //       res = await editTheatre({
-  //         theatreName: editingTheatre.name,
-  //         theatre: payload,
-  //       }).unwrap();
-  //     } else {
-  //       res = await addNewTheatre(payload).unwrap();
-  //     }
-  //     console.log("Theatre API response:", res);
-  //     dispatch(
-  //       notifyActions.openModel({
-  //         head: editingTheatre ? "Updated Theatre" : "Added Theatre",
-  //         message: res?.message || "Operation successful",
-  //         type: "success",
-  //       })
-  //     );
-  //   } catch (error) {
-  //     console.error("Theatre API error:", error);
-  //     dispatch(
-  //       notifyActions.openModel({
-  //         head: "Failed",
-  //         message: error?.data?.message || error?.message || "Request failed",
-  //         type: "error",
-  //       })
-  //     );
-  //   } finally {
-  //     setIsAddDialogOpen(false);
-  //     setEditingTheatre(null);
-  //   }
-  // }
 }

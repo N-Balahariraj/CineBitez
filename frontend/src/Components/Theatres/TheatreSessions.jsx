@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLoaderData, useRouteLoaderData } from "react-router-dom";
+import { useRouteLoaderData } from "react-router-dom";
 import TheatreHallSeatsForm from "./TheatreHallSeatsForm";
 
 export default function TheatreSessions() {
@@ -21,7 +21,6 @@ export default function TheatreSessions() {
   const hasHalls =
     Array.isArray(selectedTheatre?.halls) && selectedTheatre.halls.length > 0;
 
-  const today = useMemo(() => new Date(), []);
   const [activeDateKey, setActiveDateKey] = useState("");
 
   const sessionsForTheatre = useMemo(() => {

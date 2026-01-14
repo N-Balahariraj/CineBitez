@@ -1,21 +1,19 @@
 import { useState } from "react";
-import { useLoaderData, useRouteLoaderData } from "react-router-dom";
-import ReactPlayer from "react-player";
+import { useRouteLoaderData } from "react-router-dom";
 
 import Spotlight from "../Components/Splash/Spotlight";
 
-import { store } from "../app/store";
-import { notifyActions } from "../app/features/notificationSlice";
 import SplashForm from "../Components/Splash/SplashForm";
 import MoviePreview from "../Components/Movies/MoviePreview";
 import AdminDashboard from "../Components/Splash/AdminDashboard";
 
 export default function Splash() {
   const user = useRouteLoaderData("root");
+  const role = user?.role || "user";
   const { movies } = useRouteLoaderData("home");
   const [movie, setMovie] = useState(movies?.[0]);
   return (
-    user.role === "user" ?
+    role === "user" ?
      (
       <section className="splash scrollbar-hide">
         <h2 className="discover-title">Discover</h2>
@@ -32,7 +30,7 @@ export default function Splash() {
           {movies?.map((spotlight) => {
             return (
               <Spotlight
-                key={spotlight.id}
+                key={spotlight._id}
                 spotlight={spotlight}
                 setMovie={setMovie}
               />

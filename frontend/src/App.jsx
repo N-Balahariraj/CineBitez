@@ -4,10 +4,10 @@ import { notifyActions } from "./app/features/notificationSlice"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Root from "./Pages/Root";
 import Error from "./Pages/Error";
-import Splash, { loader as spotlightsLoader } from "./Pages/Splash";
+import Splash from "./Pages/Splash";
 import Movies, { action as adminMovieActions } from "./Pages/Movies";
 import Theatres, { action as adminTheatreActions } from "./Pages/Theatres";
-import About, { loader as aboutLoader, action as adminAboutActions} from "./Pages/About";
+import About, { loader as aboutLoader, action as adminAboutActions } from "./Pages/About";
 import Contact, { action as sendFeedback } from "./Pages/Contact";
 import Profile, {
   action as updateProfileAction,
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     path: "/",
     id: "root",
     element: <Root />,
-    hydrateFallbackElement: <Fallback/>,
+    hydrateFallbackElement: <Fallback />,
     errorElement: <Error />,
     loader: tokenLoader,
     children: [
@@ -72,18 +72,20 @@ const router = createBrowserRouter([
 
 export default function App() {
   useEffect(() => {
-    (async ()=>{
-      try{
+    const apiUrl = process.env.REACT_APP_API_URL;
+    (async () => {
+      try {
         const username = JSON.parse(localStorage.getItem("user"))?.username;
-        const res = await fetch(`http://localhost:5000/api/notifications/${username}`);
-        if(!res.ok){
+        if (!username) return;
+        const res = await fetch(`${apiUrl}/notifications/${username}`);
+        if (!res.ok) {
           throw new Error("Unable to fetch the notifications");
         }
-        const {message, notifications} = await res.json();
+        const { notifications } = await res.json();
         store.dispatch(notifyActions.setNotifications(notifications));
         // console.log("Getting the saved notifications:",notifications);
       }
-      catch(e){
+      catch (e) {
         console.log(e)
       }
     })();
@@ -91,9 +93,10 @@ export default function App() {
       const username = JSON.parse(localStorage.getItem("user"))?.username;
       const notifications = store.getState().notify.notifications;
       // console.log("Saving notifications !!!",notifications);
+      if (!username) return;
       try {
         const res = await fetch(
-          `http://localhost:5000/api/notify/${username}`,
+          `${apiUrl}/notify/${username}`,
           {
             method: "PUT",
             keepalive: true,
@@ -104,7 +107,7 @@ export default function App() {
           }
         );
         console.log(res);
-      } 
+      }
       catch (e) {
         console.log(e);
       }
@@ -117,15 +120,16 @@ export default function App() {
 
 async function homeLoader() {
   try {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const results = await Promise.all([
-      fetch("http://localhost:5000/api/movies"),
-      fetch("http://localhost:5000/api/theatres"),
-      fetch("http://localhost:5000/api/showSessions"),
+      fetch(`${apiUrl}/movies`),
+      fetch(`${apiUrl}/theatres`),
+      fetch(`${apiUrl}/showSessions`),
     ]);
 
     let data = {};
 
-    for (const result of results){
+    for (const result of results) {
       if (!result.ok) {
         store.dispatch(
           notifyActions.openModel({
@@ -137,14 +141,14 @@ async function homeLoader() {
         throw new Error("Could not fetch 'home' details");
       }
       else {
-        const {message, ...rest} = await result.json();
+        const { message, ...rest } = await result.json();
         // console.log("message : ",message);
-        data = {...data, ...rest};
+        data = { ...data, ...rest };
       }
     }
 
     return data;
-  } 
+  }
   catch (error) {
     console.log(error);
     store.dispatch(

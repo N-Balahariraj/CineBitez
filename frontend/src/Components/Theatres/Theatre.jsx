@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { IoStarSharp } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineModeEdit } from "react-icons/md";
@@ -8,7 +8,8 @@ import { useDispatch } from "react-redux";
 import { selectionActions } from "../../app/features/selectionsSlice";
 
 export default function Theatre({ theatre, onEditBtnClick }) {
-  const role = useRouteLoaderData("root").role;
+  const user = useRouteLoaderData("root");
+  const role = user?.role || "user";
   const dispatch = useDispatch();
 
   return (

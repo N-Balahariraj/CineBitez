@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Forms from "../UI/Forms/Forms";
 import { MdFileUpload } from "react-icons/md";
 
 export default function TheatreForm({ initialData = null, id, activeStep }) {
-  const picsCsv = Array.isArray(initialData?.pics)
-    ? initialData.pics.filter(Boolean).join(", ")
-    : "";
+  // const picsCsv = Array.isArray(initialData?.pics)
+  //   ? initialData.pics.filter(Boolean).join(", ")
+  //   : "";
 
   const [bgPreviewUrl, setBgPreviewUrl] = useState(null);
 

@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
 import { Outlet } from "react-router-dom";
 import HeaderNav from "../Components/Root/HeaderNav";
 import MainNav from "../Components/Root/MainNav";
-import Footer from "../Components/Root/Footer";
+// import Footer from "../Components/Root/Footer";
 import Notification from "../Components/UI/Feedbacks/Notification";
 import WeatherModal from "../Components/Root/WeatherModal"
 import { useSelector } from "react-redux";

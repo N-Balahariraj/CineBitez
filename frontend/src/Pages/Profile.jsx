@@ -267,6 +267,7 @@ export default function Profile() {
 }
 
 export async function action({ request, params }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
   try {
     // console.log("Updating user");
     const fd = await request.formData();
@@ -289,7 +290,7 @@ export async function action({ request, params }) {
     };
 
     const res = await fetch(
-      `http://localhost:5000/api/edit-account/${fd.get("username")}`,
+      `${apiUrl}/edit-account/${fd.get("username")}`,
       {
         method: "PUT",
         headers: {
@@ -314,7 +315,8 @@ export async function action({ request, params }) {
         type: "success",
       })
     );
-  } catch (error) {
+  } 
+  catch (error) {
     store.dispatch(
       notifyActions.openModel({
         head: "Update failed !",
@@ -328,12 +330,13 @@ export async function action({ request, params }) {
 }
 
 export async function removeAccountAction({ request, params }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
   try {
     const fd = await request.formData();
     const username = fd.get("username");
 
     const res = await fetch(
-      `http://localhost:5000/api/remove-account/${username}`,
+      `${apiUrl}/remove-account/${username}`,
       {
         method: "DELETE",
         headers: {
@@ -358,7 +361,8 @@ export async function removeAccountAction({ request, params }) {
     );
 
     redirect("/auth");
-  } catch (error) {
+  } 
+  catch (error) {
     store.dispatch(
       notifyActions.openModel({
         head: "Account not deleted !",

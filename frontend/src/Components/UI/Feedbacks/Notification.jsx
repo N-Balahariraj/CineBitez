@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { notifyActions } from "../../../app/features/notificationSlice";
 
 const COUNTDOWN = 5000;
 
 export default function Notification({ head, message, type }) {
-  const dispatch = useDispatch();
 
   const [remainingTime, setRemainingTime] = useState(COUNTDOWN);
   const dialogRef = useRef();

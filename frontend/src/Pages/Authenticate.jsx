@@ -97,6 +97,8 @@ export default function Authenticate() {
 }
 
 export async function action({ request, params }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   try {
     const fd = await request.formData();
 
@@ -107,7 +109,7 @@ export async function action({ request, params }) {
       role: fd.get("role") || "user",
     };
 
-    const res = await fetch("http://localhost:5000/api/authenticate", {
+    const res = await fetch(`${apiUrl}/authenticate`, {
       method: request.method,
       headers: {
         "Content-Type": "application/json",

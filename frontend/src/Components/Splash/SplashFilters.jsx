@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { useGetMoviesQuery } from "../../app/api/moviesApiSlice";
+import { useRouteLoaderData } from "react-router-dom";
 
 export default function SplashFilters({
   currentScreen,
   setFilteredSpotlights,
 }) {
-  const {
-    data: { _, movies: Movie_Data } = {},
-  } = useGetMoviesQuery();
+
+  const { movies } = useRouteLoaderData("home");
 
   const [searchText, setSearchText] = useState("");
 
@@ -17,7 +17,7 @@ export default function SplashFilters({
   }, [searchText]);
 
   function filterBySearchText() {
-    const filteredSpotlights = Movie_Data?.filter((spotlight) => {
+    const filteredSpotlights = movies?.filter((spotlight) => {
       return spotlight?.movie.toLowerCase().includes(searchText.toLowerCase());
     });
     setFilteredSpotlights(filteredSpotlights ?? []);

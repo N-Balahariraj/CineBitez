@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { IoIosPricetags } from "react-icons/io";
 import { FaStarHalfAlt } from "react-icons/fa";
 import { RiRobot2Fill } from "react-icons/ri";
@@ -8,8 +8,6 @@ import Filters from "../UI/Filters/Filters";
 export default function MovieFilters({ movies, setFilteredMovies }) {
   const [SelectedLanguage, setSelectedLanguage] = useState("Languages");
   const [SelectedGenere, setSelectedGenere] = useState("Genres");
-  const [SelectedPrice, setSelectedPrice] = useState("Pricings");
-  const [SelectedRate, setSelectedRate] = useState("Ratings");
 
   //prettier-ignore
   const Languages = ["Languages","English","Hindi","Tamil","Malayalam","Telugu","Kannadam"];

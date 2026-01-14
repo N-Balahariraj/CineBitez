@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RiMovieLine } from "react-icons/ri";
 import { BsBookmarkPlus } from "react-icons/bs";
 import { IoStarSharp } from "react-icons/io5";
@@ -9,7 +9,7 @@ import { selectionActions } from "../../app/features/selectionsSlice";
 export default function Spotlight({spotlight, setMovie}) {
   // const { movie, rating, imageUrl, imdb_url  } = MovieDetails
   // console.log("Spotllight : ",MovieDetails)
-  const { id, languages, imageUrl, movie, genres, rating, votes } = spotlight;
+  const { languages, imageUrl, movie, genres, rating, votes } = spotlight;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

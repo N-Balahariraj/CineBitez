@@ -11,8 +11,8 @@ import { ImPushpin } from "react-icons/im";
 
 export default function About() {
   const user = useRouteLoaderData("root");
-  const { initMsg, content: initialContent } = useLoaderData() || {};
-  const { uptMsg, content: updatedContent } = useActionData() || {};
+  const { content: initialContent } = useLoaderData() || {};
+  const { content: updatedContent } = useActionData() || {};
   const isAdmin = user?.role === "admin";
   const Tag = isAdmin ? "textarea" : "span";
   useEffect(() => {}, [updatedContent]);
@@ -35,8 +35,10 @@ export default function About() {
 }
 
 export async function loader({ request, params }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   try {
-    const res = await fetch("http://localhost:5000/api/site-content/about");
+    const res = await fetch(`${apiUrl}/site-content/about`);
     if (!res.ok) {
       throw new Error("Unable to fetch the site contents");
     }
@@ -58,10 +60,12 @@ export async function loader({ request, params }) {
 }
 
 export async function action({ request, params }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   try {
     const fd = await request.formData();
     const content = fd.get("content");
-    const res = await fetch("http://localhost:5000/api/site-content/about", {
+    const res = await fetch(`${apiUrl}/site-content/about`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

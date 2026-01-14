@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouteLoaderData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { notifyActions } from "../../app/features/notificationSlice";
@@ -10,7 +10,7 @@ import { TbCalendarPin } from "react-icons/tb";
 import { MdOutlineCurtains } from "react-icons/md";
 
 export default function SplashForm() {
-  const userId = useRouteLoaderData("root")._id; // assuming logged-in user
+  const userId = useRouteLoaderData("root")?._id; // assuming logged-in user
   const { movies, theatres, showSessions } = useRouteLoaderData("home");
 
   const bookingSelection = useSelector(
@@ -18,7 +18,6 @@ export default function SplashForm() {
   );
   const dispatch = useDispatch();
 
-  const now = Date.now();
   const activeSessions = useMemo(() => {
     const now = Date.now();
     return showSessions.filter((s) => new Date(s.endTime).getTime() >= now);
@@ -43,7 +42,7 @@ export default function SplashForm() {
     if (lockedLocation) setLocation(lockedLocation);
   }, [lockedLocation]);
 
-  const sessionsFor = (ignore = []) =>
+  const sessionsFor = useCallback((ignore = []) =>
     activeSessions.filter((s) => {
       if (!ignore.includes("movie") && movieId && s.movieId !== movieId)
         return false;
@@ -55,7 +54,9 @@ export default function SplashForm() {
         return theatreById.get(s.theatreId)?.location === effectiveLocation;
       }
       return true;
-    });
+    }),
+    [activeSessions, movieId, theatreId, date, effectiveLocation, theatreById]
+  );
 
   const sessionToBook = useMemo(() => {
     if (!movieId || !theatreId) return null;
@@ -103,7 +104,7 @@ export default function SplashForm() {
       .filter((t) => ids.has(t._id))
       .map((t) => ({ value: t._id, label: t.name }))
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [theatres, movieId, date, effectiveLocation, showSessions]);
+  }, [theatres, sessionsFor]);
 
   const movieOptions = useMemo(() => {
     const ids = new Set(sessionsFor(["movie"]).map((s) => s.movieId));
@@ -111,7 +112,7 @@ export default function SplashForm() {
       .filter((m) => ids.has(m._id))
       .map((m) => ({ value: m._id, label: m.movie }))
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [movies, theatreId, date, effectiveLocation, showSessions]);
+  }, [movies, sessionsFor]);
 
   const dateOptions = useMemo(() => {
     const keys = new Set(
@@ -120,23 +121,16 @@ export default function SplashForm() {
     return Array.from(keys)
       .sort()
       .map((d) => ({ value: d, label: d }));
-  }, [movieId, theatreId, effectiveLocation, showSessions]);
+  }, [sessionsFor]);
 
   const locationOptions = useMemo(() => {
-    if (lockedLocation)
-      return [{ value: lockedLocation, label: lockedLocation }];
+    if (lockedLocation) return [{ value: lockedLocation, label: lockedLocation }];
 
-    const theatreIds = new Set(
-      sessionsFor(["location"]).map((s) => s.theatreId)
-    );
-    const locs = new Set(
-      theatres.filter((t) => theatreIds.has(t._id)).map((t) => t.location)
-    );
+    const theatreIds = new Set(sessionsFor(["location"]).map((s) => s.theatreId));
+    const locs = new Set(theatres.filter((t) => theatreIds.has(t._id)).map((t) => t.location));
 
-    return Array.from(locs)
-      .sort()
-      .map((l) => ({ value: l, label: l }));
-  }, [theatres, movieId, theatreId, date, showSessions, lockedLocation]);
+    return Array.from(locs).sort().map((l) => ({ value: l, label: l }));
+  }, [lockedLocation, theatres, sessionsFor]);
 
   // auto-clear if current selection becomes invalid
   useEffect(() => {
@@ -164,6 +158,8 @@ export default function SplashForm() {
   }, [location, locationOptions, lockedLocation]);
 
   async function confirmBooking() {
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     try {
       const payload = {
         userId,
@@ -172,7 +168,7 @@ export default function SplashForm() {
         totalAmount: bookingSelection.totalAmount,
       };
 
-      const res = await fetch("http://localhost:5000/api/new-booking", {
+      const res = await fetch(`${apiUrl}/new-booking`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -197,8 +193,7 @@ export default function SplashForm() {
       setLocation("");
       setIsSeatDialogOpen(false);
       setSelectedSession(null);
-    } 
-    catch (e) {
+    } catch (e) {
       dispatch(
         notifyActions.openModel({
           head: "Booking failed !",

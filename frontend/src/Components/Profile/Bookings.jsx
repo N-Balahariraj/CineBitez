@@ -108,16 +108,28 @@ export default function Bookings() {
   );
 }
 
-export async function loader(){
-  try{
-    const userId = JSON.parse(localStorage.getItem('user'))?._id;
-    const res = await fetch(`http://localhost:5000/api/bookings?userId=${userId}`);
-    if(!res.ok){
+export async function loader() {
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const userId = JSON.parse(localStorage.getItem('user'))?._id;
+
+  if (!userId) {
+    store.dispatch(
+      notifyActions.openModel({
+        head: "Forbidden",
+        message: "Login or SignUp to access your Bookings",
+        type: 'error'
+      })
+    );
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/bookings?userId=${userId}`);
+    if (!res.ok) {
       throw new Error("Unable to fetch your bookings");
     }
     return res;
   }
-  catch(e){
+  catch (e) {
     console.log(e);
     store.dispatch(
       notifyActions.openModel({

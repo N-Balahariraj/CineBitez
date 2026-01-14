@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import {
   useActionData,
-  useLoaderData,
   useNavigation,
   useRouteLoaderData,
 } from "react-router-dom";
@@ -26,7 +25,8 @@ import convertTobase64 from "../utils/base64";
 
 export default function Movies() {
   // react-router-dom
-  const role = useRouteLoaderData("root").role;
+  const user = useRouteLoaderData("root");
+  const role = user?.role || "user";
   const { movies } = useRouteLoaderData('home');
   const movie = useActionData();
   const navigation = useNavigation();
@@ -116,6 +116,7 @@ export async function loader() {
 }
 
 export async function action({ request, params }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
   try {
     const fd = await request.formData();
 
@@ -153,19 +154,19 @@ export async function action({ request, params }) {
 
     const OPTIONS_BY_INTENT = {
       create: {
-        url: "http://localhost:5000/api/new-movies",
+        url: `${apiUrl}/new-movies`,
         method: "POST",
         body: payload,
       },
       update: {
-        url: `http://localhost:5000/api/edit-movie/${encodeURIComponent(
+        url: `${apiUrl}/edit-movie/${encodeURIComponent(
           movieName || ""
         )}`,
         method: "PUT",
         body: payload,
       },
       delete: {
-        url: `http://localhost:5000/api/remove-movie/${encodeURIComponent(
+        url: `${apiUrl}/remove-movie/${encodeURIComponent(
           movieName
         )}`,
         method: "DELETE",

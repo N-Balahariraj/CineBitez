@@ -558,57 +558,6 @@ input[type="time"]:not([value=""]):before {
   padding: 0.5rem 0;
 }
 
-.ag-theme-quartz.cine-grid > div,
-.ag-theme-quartz.cine-grid .ag-root-wrapper {
-  --ag-font-family: "Courier New", Courier, monospace !important;
-  --ag-font-size: 14px !important;
-
-  --ag-background-color: var(--alpha-bg-color) !important;
-  --ag-foreground-color: var(--primary-text-color) !important;
-  --ag-data-color: var(--primary-text-color) !important;
-
-  --ag-secondary-foreground-color: var(--alpha-text-color) !important;
-  --ag-header-foreground-color: var(--primary-text-color) !important;
-  --ag-header-background-color: var(--alpha-bg-color) !important;
-
-  --ag-row-hover-color: var(--alpha-bg-color) !important;
-
-  /* spacing / padding */
-  --ag-grid-size: 10px !important;
-  --ag-cell-horizontal-padding: calc(var(--ag-grid-size) * 2) !important;
-  --ag-header-height: calc(
-    var(--ag-font-size) + var(--ag-grid-size) * 4.25
-  ) !important;
-  --ag-row-height: calc(
-    var(--ag-font-size) + var(--ag-grid-size) * 3.5
-  ) !important;
-
-  /* row borders (horizontal lines) */
-  --ag-row-border-style: solid !important;
-  --ag-row-border-width: 1px !important;
-  --ag-row-border-color: rgba(255, 255, 255, 0.06) !important;
-
-  /* overall borders + header separators */
-  --ag-borders: solid 1px !important;
-  --ag-border-color: rgba(255, 255, 255, 0.12) !important;
-  --ag-secondary-border-color: rgba(255, 255, 255, 0.08) !important;
-  --ag-header-column-separator-color: rgba(255, 255, 255, 0.12) !important;
-  --ag-header-column-separator-width: 1px !important;
-
-  /* optional: vertical lines between columns */
-  --ag-cell-horizontal-border: solid 1px rgba(255, 255, 255, 0.06) !important;
-}
-
-.ag-theme-quartz.cine-grid .ag-root-wrapper {
-  border-radius: var(--standard-border-radius);
-  overflow: hidden;
-}
-
-/* Make header bottom border visible */
-.ag-theme-quartz.cine-grid .ag-header {
-  border-bottom: 1px solid var(--ag-secondary-border-color) !important;
-}
-
 /* Gradient hover overlay (AG Grid uses ::before for hover) */
 .ag-theme-quartz.cine-grid .ag-row-hover:not(.ag-full-width-row)::before {
   background-color: transparent !important;
