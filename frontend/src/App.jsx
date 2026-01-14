@@ -20,13 +20,14 @@ import Bookings, {
 import Notifications from "./Components/Profile/Notifications";
 import Authenticate, { action as authAction } from "./Pages/Authenticate";
 import { checkAuthLoader, getAuthToken as tokenLoader } from "./utils/auth";
+import Fallback from "./Pages/Fallback";
 
 const router = createBrowserRouter([
   {
     path: "/",
     id: "root",
     element: <Root />,
-    HydrateFallback: () => <div>Loading...</div>,
+    hydrateFallbackElement: <Fallback/>,
     errorElement: <Error />,
     loader: tokenLoader,
     children: [

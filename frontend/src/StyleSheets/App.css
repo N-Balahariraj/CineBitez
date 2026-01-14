@@ -77,6 +77,60 @@ body {
   grid-gap: 1rem;
 }
 
+/* Error + Fallback Pages */
+.app-page-center {
+  grid-row: 2/3;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.app-card {
+  width: min(92vw, 520px);
+  border-radius: var(--standard-border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--alpha-linear-gradient);
+  backdrop-filter: blur(9.6px);
+  color: var(--primary-text-color);
+  padding: 1rem;
+}
+
+.app-card--compact {
+  width: min(92vw, 360px);
+  text-align: center;
+}
+
+.app-card__title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.app-card__subtitle {
+  margin-top: 0.35rem;
+  color: var(--alpha-text-color);
+}
+
+.app-card__meta {
+  margin-top: 0.85rem;
+  border-radius: calc(var(--standard-border-radius) - 4px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--alpha-bg-color);
+  padding: 0.75rem;
+}
+
+.app-card__pre {
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--alpha-text-color);
+}
+
+/* Notifications (Toasts) */
+
 .notification {
   /* display: flex; */
   position: fixed;
