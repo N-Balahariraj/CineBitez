@@ -46,9 +46,10 @@ export default function Profile() {
 
   async function logout(event) {
     event.preventDefault();
+    const apiUrl = process.env.REACT_APP_API_URL;
     try {
       const res = await fetch(
-        `http://localhost:5000/api/edit-account/${user.username}`,
+        `${apiUrl}/edit-account/${user.username}`,
         {
           method: "PUT",
           headers: {
