@@ -27,7 +27,7 @@ export default function Movies() {
   // react-router-dom
   const user = useRouteLoaderData("root");
   const role = user?.role || "user";
-  const { movies } = useRouteLoaderData('home');
+  const { movies } = useRouteLoaderData("home");
   const movie = useActionData();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
@@ -68,7 +68,7 @@ export default function Movies() {
   return (
     <>
       <section className="movies scrollbar-hide">
-        <MovieFilters movies={movies} setFilteredMovies={setFilteredMovies}/>
+        <MovieFilters movies={movies} setFilteredMovies={setFilteredMovies} />
         <MoviePreview selectedMovie={selectedMovie} className={"player"} />
         <MovieDetails selectedMovie={selectedMovie} />
         {!isTablet && <TheatreDetails selectedTheatre={selectedTheatre} />}
@@ -111,9 +111,7 @@ export default function Movies() {
   );
 }
 
-export async function loader() {
-  
-}
+export async function loader() { }
 
 export async function action({ request, params }) {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -124,29 +122,38 @@ export async function action({ request, params }) {
 
     // console.log(fd.get("posterUrl")?.size)
 
-    const posterUrl = await convertTobase64(fd.get("posterUrl"));
-    // console.log(posterUrl)
+    let payload;
 
-    const payload = {
-      imageUrl: posterUrl,
-      movie: String(fd.get("movie") || "").trim(),
-      languages: String(fd.get("languages") || "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-      genres: String(fd.get("genres") || "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-      rating: fd.get("rating") ? Number(fd.get("rating")) : undefined,
-      votes: fd.get("votes") ? String(fd.get("votes")).trim() : undefined,
-      price: fd.get("price") ? Number(fd.get("price")) : undefined,
-      duration: fd.get("duration") ? Math.round(Number(fd.get("duration")) * 3600000) : undefined,
-      trailers: String(fd.get("trailers") || "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-    };
+    if (intent !== "delete") {
+      const posterUrl =
+        fd.get("posterUrl").size === 0
+          ? document.getElementById("posterPreview").src
+          : await convertTobase64(fd.get("posterUrl"));
+      // console.log(posterUrl)
+
+      payload = {
+        imageUrl: posterUrl,
+        movie: String(fd.get("movie") || "").trim(),
+        languages: String(fd.get("languages") || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        genres: String(fd.get("genres") || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        rating: fd.get("rating") ? Number(fd.get("rating")) : undefined,
+        votes: fd.get("votes") ? String(fd.get("votes")).trim() : undefined,
+        price: fd.get("price") ? Number(fd.get("price")) : undefined,
+        duration: fd.get("duration")
+          ? Math.round(Number(fd.get("duration")) * 3600000)
+          : undefined,
+        trailers: String(fd.get("trailers") || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      };
+    }
 
     // console.log(payload);
 
@@ -159,16 +166,12 @@ export async function action({ request, params }) {
         body: payload,
       },
       update: {
-        url: `${apiUrl}/edit-movie/${encodeURIComponent(
-          movieName || ""
-        )}`,
+        url: `${apiUrl}/edit-movie/${encodeURIComponent(movieName || "")}`,
         method: "PUT",
         body: payload,
       },
       delete: {
-        url: `${apiUrl}/remove-movie/${encodeURIComponent(
-          movieName
-        )}`,
+        url: `${apiUrl}/remove-movie/${encodeURIComponent(movieName)}`,
         method: "DELETE",
       },
     };

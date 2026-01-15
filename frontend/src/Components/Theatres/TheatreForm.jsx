@@ -73,6 +73,7 @@ export default function TheatreForm({ initialData = null, id, activeStep }) {
           {bgPreviewUrl && (
             <div className="h-[50px] w-[100px] flex border-2 rounded-md overflow-hidden">
               <img
+                id="bgPreview"
                 src={bgPreviewUrl || ""}
                 alt=""
                 className="w-[70%]"

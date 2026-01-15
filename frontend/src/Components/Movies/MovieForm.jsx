@@ -130,6 +130,7 @@ export default function MovieForm({ isOpen, onClose, initialData = null }) {
               {posterPreviewUrl && (
                 <div className="h-[50px] w-[100px] flex border-2 rounded-md overflow-hidden">
                   <img
+                    id="posterPreview"
                     src={posterPreviewUrl || ""}
                     alt=""
                     className="w-[70%]"

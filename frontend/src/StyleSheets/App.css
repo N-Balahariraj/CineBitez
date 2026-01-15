@@ -1218,7 +1218,7 @@ input[type="time"]:not([value=""]):before {
 
 .movie-cards__edit-icon:hover,
 .movie-cards__edit-icon:active {
-  background-color: var(--alpha-linear-gradient);
+  background-color: var(--alpha-bg-color);
 }
 
 @media (min-width: 40rem) {

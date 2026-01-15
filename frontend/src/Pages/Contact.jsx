@@ -72,12 +72,13 @@ export async function action({ request, params }) {
     const fd = await request.formData();
     const intent = fd.get("intent");
     const feedback = fd.get("feedback").trim();
+    let username = fd.get("name");
     if(feedback === ""){
       throw new Error("Feedback cannot be empty field");
     }
     let payload;
     if (intent === "reply") {
-      apiUrl += `/notify/${fd.get("name")}`;
+      apiUrl += `/notify/${username}`;
       payload = {
         head: "Reply",
         message: `Message from admin : ${feedback}`,
@@ -85,6 +86,7 @@ export async function action({ request, params }) {
       };
     } 
     else {
+      username = "Admin";
       apiUrl += `/notify/balahariraj`;
       payload = {
         head: "Feedback",
@@ -106,7 +108,7 @@ export async function action({ request, params }) {
     store.dispatch(
       notifyActions.openModel({
         head: "Feedback sent",
-        message: "Feedback Sent to the Admin Successfully",
+        message: `Feedback Sent to the ${username? username : "Admin"} Successfully`,
         type: "success"
       })
     )

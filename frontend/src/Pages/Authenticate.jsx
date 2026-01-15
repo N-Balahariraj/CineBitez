@@ -12,7 +12,7 @@ export default function Authenticate() {
   const [selectedRole, setSelectedRole] = useState("user");
 
   return (
-    <Forms method="post" className="authenticate">
+    <Forms method="post" className="authenticate scrollbar-hide">
       <h1 className="authenticate__title">
         Welcome to CineBitez
       </h1>

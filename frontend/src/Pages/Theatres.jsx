@@ -24,9 +24,10 @@ export default function Theatres() {
   const user = useRouteLoaderData("root");
   const role = user?.role;
   const { theatres, showSessions } = useRouteLoaderData("home");
-  const { theatre: createdTheatre, showSessions: sessions } = useActionData() || {};
+  const { theatre: createdTheatre, showSessions: sessions } =
+    useActionData() || {};
   const navigation = useNavigation();
-  
+
   const selectedMovie = useSelector((state) => state.selection.selectedMovie);
   const dispatch = useDispatch();
 
@@ -37,7 +38,7 @@ export default function Theatres() {
   useEffect(() => {
     setFilteredTheatres(theatres);
     selectionActions.setSelectedTheatre(null);
-  }, [createdTheatre,sessions,theatres,showSessions]);
+  }, [createdTheatre, sessions, theatres, showSessions]);
 
   const [wizardKey, setWizardKey] = useState(0);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
@@ -167,7 +168,10 @@ export default function Theatres() {
   return (
     <>
       <div className="theatres scrollbar-hide">
-        <TheatreFilters theatres={theatres} setFilteredTheatres={setFilteredTheatres}/>
+        <TheatreFilters
+          theatres={theatres}
+          setFilteredTheatres={setFilteredTheatres}
+        />
         <TheatrePreview />
         <TheatreDetails />
         {!isTablet && <MovieDetails selectedMovie={selectedMovie} />}
@@ -175,7 +179,7 @@ export default function Theatres() {
         <div className="theatre scrollbar-hide">
           {filteredTheatres?.map((theatre) => (
             <Theatre
-              key={theatre.id}
+              key={theatre._id}
               theatre={theatre}
               onEditBtnClick={(e) => {
                 e.stopPropagation();
@@ -273,7 +277,7 @@ export default function Theatres() {
                       : "session"
                   }
                 >
-                  {isIdle && step === 2 ? "Submit" : "Submit All"}
+                  {isIdle ? (step === 2 ? "Submit" : "Submit All") : ""}
                   {!isIdle && "Submitting..."}
                 </Forms.Button>
               )}
@@ -383,15 +387,12 @@ export async function action({ request }) {
       const failures = [];
 
       if (toDelete.length) {
-        const res = await fetch(
-          `${apiUrl}/flush-showSessions`,
-          {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ids: toDelete }),
-          }
-        );
-        if(!res.ok) failures.push(`Delete failed (${res.status})`)
+        const res = await fetch(`${apiUrl}/flush-showSessions`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ids: toDelete }),
+        });
+        if (!res.ok) failures.push(`Delete failed (${res.status})`);
       }
 
       if (toCreate.length) {
@@ -402,7 +403,7 @@ export async function action({ request }) {
         });
         if (!res.ok) failures.push(`Create failed (${res.status})`);
         const data = await res.json();
-        showSessions = data.showSessions
+        showSessions = data.showSessions;
       }
 
       if (failures.length) {
@@ -424,8 +425,7 @@ export async function action({ request }) {
         })
       );
 
-      if(fd.get("id"))
-        intent = "edit-theatre"
+      if (fd.get("id")) intent = "edit-theatre";
     }
 
     const theatreName = fd.get("theatreName");
@@ -436,19 +436,25 @@ export async function action({ request }) {
     //   .map((s) => s.trim())
     //   .filter(Boolean);
 
-    const bg = await convertTobase64(fd.get("bgUrl"))
+    let theatrePayload;
+    if (intent !== "delete-theatre") {
+      let bg =
+        fd.get("bgUrl").size === 0
+          ? document.getElementById("bgPreview").src
+          : await convertTobase64(fd.get("bgUrl"));
 
-    // console.log(bg);
+      // console.log(bg);
 
-    // Theatre Payload
-    const theatrePayload = {
-      name: fd.get("name"),
-      rating: fd.get("rating"),
-      price: fd.get("price"),
-      location: fd.get("location"),
-      bg,
-      halls: JSON.parse(fd.get("halls")),
-    };
+      // Theatre Payload
+      theatrePayload = {
+        name: fd.get("name"),
+        rating: fd.get("rating"),
+        price: fd.get("price"),
+        location: fd.get("location"),
+        bg,
+        halls: JSON.parse(fd.get("halls")),
+      };
+    }
 
     const OPTIONS_BY_INTENT = {
       "create-theatre": {
@@ -457,16 +463,12 @@ export async function action({ request }) {
         body: theatrePayload,
       },
       "edit-theatre": {
-        url: `${apiUrl}/edit-theatre/${encodeURIComponent(
-          theatreName || ""
-        )}`,
+        url: `${apiUrl}/edit-theatre/${encodeURIComponent(theatreName || "")}`,
         method: "PUT",
         body: theatrePayload,
       },
       "delete-theatre": {
-        url: `${apiUrl}/remove-theatre/${encodeURIComponent(
-          theatreName
-        )}`,
+        url: `${apiUrl}/remove-theatre/${encodeURIComponent(theatreName)}`,
         method: "DELETE",
       },
     };
@@ -510,7 +512,7 @@ export async function action({ request }) {
 
     return {
       theatre,
-      showSessions
+      showSessions,
     };
   } catch (error) {
     console.log(error);
