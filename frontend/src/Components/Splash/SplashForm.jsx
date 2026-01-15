@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouteLoaderData } from "react-router-dom";
+import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { notifyActions } from "../../app/features/notificationSlice";
 import { selectionActions } from "../../app/features/selectionsSlice";
@@ -17,6 +17,8 @@ export default function SplashForm() {
     (state) => state.selection.bookingSelection
   );
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const activeSessions = useMemo(() => {
     const now = Date.now();
@@ -275,6 +277,15 @@ export default function SplashForm() {
         type="button"
         disabled={!sessionToBook && !hasSeatSelection}
         onClick={() => {
+          if(!userId){
+            dispatch(notifyActions.openModel({
+              head: "Forbidden",
+              message: "Login or SignUp to book your seats",
+              type: "error"
+            }));
+            navigate("/auth");
+            return;
+          }
           if (hasSeatSelection) {
             confirmBooking();
             return;
@@ -282,7 +293,7 @@ export default function SplashForm() {
           setSelectedSession(sessionToBook);
           setIsSeatDialogOpen(true);
         }}
-        className="h-[40px] w-[100%] rounded-md bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 text-white"
+        className="h-[40px] w-[100%] rounded-md bg-[image:var(--primary-linear-gradient)] text-white disabled:bg-[image:var(--alpha-linear-gradient)] disabled:cursor-not-allowed"
       >
         {hasSeatSelection
           ? `Confirm Booking for ₹ ${Number(
