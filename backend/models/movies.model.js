@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const validator = require('validator'); // For URL validation
 
 const movieSchema = new mongoose.Schema({
-    id: { 
-        type: Number, 
-        unique: true,
-    },
+    // id: { 
+    //     type: Number, 
+    //     unique: true,
+    // },
     imageUrl: {
         type: String,
         required: [true, 'Movie poster URL is required.'],
