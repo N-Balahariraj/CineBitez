@@ -77,7 +77,7 @@ export async function action({ request, params }) {
     }
     let payload;
     if (intent === "reply") {
-      apiUrl += `/${fd.get("name")}`;
+      apiUrl += `/notify/${fd.get("name")}`;
       payload = {
         head: "Reply",
         message: `Message from admin : ${feedback}`,
@@ -85,7 +85,7 @@ export async function action({ request, params }) {
       };
     } 
     else {
-      apiUrl += `/balahariraj`;
+      apiUrl += `/notify/balahariraj`;
       payload = {
         head: "Feedback",
         message: `${fd.get("name")} : ${fd.get("email" )} \n ${fd.get("feedback")}`,
